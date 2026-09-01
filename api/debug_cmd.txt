@@ -1,0 +1,1 @@
+start /B "" "C:\xampp\php\php.exe" "C:\xampp\htdocs\TaneLog\api\send_notification_cli.php" "{ target_user_ids :[24], title : TaneLog , body : TaneLog\uff08\u5e83\u5831\uff09\u3055\u3093\u304c\u65b0\u3057\u3044\u6295\u7a3f\u3092\u3057\u307e\u3057\u305f , url : \/detail.php?contentid=164615637474128 }"

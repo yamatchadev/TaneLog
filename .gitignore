@@ -1,0 +1,10 @@
+/vendor/
+/meijiro/
+/trush/
+/uploads/
+db.php
+secret.php
+gettoken.php
+callback.php
+token.json
+/api/notify_function_core.php

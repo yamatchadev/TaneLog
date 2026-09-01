@@ -1,0 +1,19 @@
+{
+    "require": {
+        "google/apiclient": "^2.19",
+        "minishlink/web-push": "^11.0"
+    },
+    "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+    "extra": {
+        "google/apiclient-services": [
+            "Gmail"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}

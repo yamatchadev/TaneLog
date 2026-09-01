@@ -1,0 +1,191 @@
+:root {
+    --primary-color: #f7fcfc;
+    --button-color: #4f5d95;
+    --bg-color: #1a202c;
+    --card-bg: #2d3748;
+    --text-color: #f7fafc;
+    --border-color: #5f6d83;
+    --code-color: #000000;
+}
+header h1 {
+	font-weight: normal;
+	margin: 0;padding: 0;
+	font-size: 0.8rem;		/*文字サイズを80%*/
+	letter-spacing: 0.1em;	/*文字間隔を少しだけ広く*/
+                
+}
+body {
+    margin: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    /*transition: background-color 0.3s, color 0.3s;*/
+}
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+
+}
+.header-main-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+header img {
+    margin-top: 5px;
+    height: 45px;
+}            
+/* ヘッダー右側のボタン配置用エリア */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+/* ダークモード切替ボタンのスタイル */
+.theme-toggle-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    user-select: none;
+}
+.theme-toggle-btn:hover {
+    background: none;
+    transform: scale(1.1);
+}
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px 15px;
+}
+.error-msg {
+    background-color: #fff5f5;
+    color: #c53030;
+    border-radius: 6px;
+    font-size: 14px;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+    margin-bottom: 12px;
+    border: 1px solid var(--border-color);
+}
+.side-menu ul li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.side-menu .menu-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    position: relative;
+    top:4px;
+}
+            /* レスポンシブ対応 (スマホでは1カラムに) */
+            @media (max-width: 768px) {
+                .layout-container {
+                    flex-direction: column;
+                }
+                .sidebar {
+                    width: 100%;
+                }
+            }
+                        .menu-btn {
+                width: 30px;
+                height: 24px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 0;
+            }
+            .menu-btn span {
+                display: block;
+                width: 100%;
+                height: 3px;
+                background-color: var(--text-color);
+                border-radius: 2px;
+                transition: background-color 0.3s;
+            }
+
+            /* サイドメニュー */
+            .side-menu {
+                position: fixed;
+                top: 0;
+                right: -300px;
+                width: 260px;
+                height: 100%;
+                background-color: #2d3748;
+                transition: right 0.3s ease;
+                z-index: 99;
+                box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+            }
+            .side-menu.active {
+                right: 0;
+            }
+
+            /* メニュー内の閉じるボタンエリア */
+            .menu-close-wrapper {
+                display: flex;
+                justify-content: flex-end;
+                padding: 15px 20px;
+            }
+            .close-btn {
+                background: none;
+                border: none;
+                color: #a0aec0;
+                font-size: 28px;
+                cursor: pointer;
+                line-height: 1;
+                padding: 0;
+            }
+            .close-btn:hover {
+                color: #fff;
+            }
+
+            .side-menu ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .side-menu ul li a {
+                display: block;
+                padding: 16px 24px;
+                color: #e2e8f0;
+                text-decoration: none;
+                font-size: 16px;
+                border-bottom: 1px solid #4a5568;
+                transition: background 0.2s;
+            }
+            .side-menu ul li a:hover {
+                background-color: #4a5568;
+                color: #fff;
+            }
+            .side-menu ul li.danger a {
+                color: #feb2b2;
+            }
+            .side-menu ul li.danger a:hover {
+                background-color: #9b2c2c;
+                color: #fff;
+            }
