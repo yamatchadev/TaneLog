@@ -13,8 +13,11 @@ require_once 'api/newscheck.php';
 // ───【追加】ログインユーザーの情報を取得 ───
 $user_stmt = $pdo->prepare("SELECT nickname, icon_path, username FROM users WHERE id = ?");
 $user_stmt->execute([$_SESSION['user_id']]);
-$current_user = $user_stmt->fetch();
-
+$current_user = $user_stmt->fetch(PDO::FETCH_ASSOC);
+if(!$current_user){
+    $_SESSION['error-msg'] = "ユーザー情報が存在しません。";
+    header('Location: login.php');
+}
 // ログインユーザー用のアイコンパスを確定
 $current_icon_src = ($current_user['icon_path'] && file_exists(__DIR__ . '/' . $current_user['icon_path']))
     ? htmlspecialchars($current_user['icon_path'])

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'db.php';
+require_once __DIR__.'/db.php';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label>パスワード</label>
-                    <input type="password" name="pass" placeholder="6文字以上" minlength="6" required>
+                    <input type="password" name="pass" placeholder="6文字以上" minlength="6" required value="<?php if(isset($pass)){echo $pass;}?>">
                 </div>
                 <div class="form-group">
                     <label>パスワードの確認</label>

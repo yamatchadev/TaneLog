@@ -3,15 +3,20 @@ session_start();
 $debug = "";
 // すでにログイン済みだったらtimeline.phpに遷移
 if(isset($_SESSION['user_id'])) {
+    if(isset($_SESSION['redirect_after_login'])){
+        header('Location:'.$_SESSION['redirect_after_login']);
+        exit;
+    }else{
         header('Location: timeline.php');
-        exit();
-    } elseif(isset($_COOKIE['remember_token'])) {
+        exit;
+    }
+} elseif(isset($_COOKIE['remember_token'])) {
 
     require_once __DIR__.'/db.php';
     $token = hash('sha256',$_COOKIE['remember_token']);
     $stmt = $pdo->prepare("SELECT * FROM users WHERE remember_token = ?");
     $stmt->execute([$token]);
-    $user = $stmt->fetch();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if($user){
         $_COOKIE['remember_token'] = array();
@@ -19,11 +24,9 @@ if(isset($_SESSION['user_id'])) {
         $_SESSION['nickname'] = $user['nickname'];
         $newtoken = bin2hex(random_bytes(32));
         $_COOKIE['remember_token'] = $newtoken;
-        $stmt = $pdo->prepare("UPDATE users SET remember_token = $newtoken WHERE user_id = ?");
-        $stmt->execute($user['user_id']);
+        $stmt = $pdo->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
+        $stmt->execute([$newtoken,$user['id']]);
         if($stmt){
-            echo "うまくいきました";
-            exit();
             header('Location: timeline.php');            
         }else{
             $error = "DBへのトークン登録に失敗しました。";
@@ -49,35 +52,33 @@ if(isset($_SESSION['user_id'])) {
             $auto_login_token_hashed = hash('sha256', $auto_login_token);
             $stmt = $pdo->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
             $stmt->execute([$auto_login_token_hashed, $user['id']]);
-            setcookie('remember_token', $auto_login_token, [
-                'expires'  => time() + (60*60*24*30),
-                'path'     => '/',
-                'secure'   => true,
-                'httponly' => false,
-                'samesite' => 'Lax',
-            ]);
-
-            if(isset($_GET['to'])){
-                $redirect = htmlspecialchars($_GET['to']);
-                if(isset($_GET['username'])){
-                    $username = htmlspecialchars($_GET['username']);
-                    header('Location:'.$redirect.'?username='.$username);
-                    exit();
-                }else{
-                    header('Location:' . $redirect);
-                    exit();
-                }
-            } else {
-                header('Location: timeline.php');
-                exit();
+            $stmt->fetch(PDO::FETCH_ASSOC);
+            if($stmt){
+                setcookie('remember_token', $auto_login_token, [
+                    'expires'  => time() + (60*60*24*30),
+                    'path'     => '/',
+                    'secure'   => true,
+                    'httponly' => false,
+                    'samesite' => 'Lax',
+                ]);                
+            }else{
+                header('dberror.php');
             }
-        } else {
-            $error = 'メールアドレスまたはパスワードが違います。';
-            $debug = "DBと照合した結果、入力されたメアドとパスワードの組み合わせが見つかりませんでした。";
-        }        
-    }else{
-        $debug = "クッキー上のトークンがデータベースにありません。";
-    }
+
+            if(isset($_SESSION['redirect_after_login'])){
+            header('Location:'.$_SESSION['redirect_after_login']);
+            exit;
+        }else{
+            header('Location: timeline.php');
+            exit;
+        }
+    } else {
+        $error = 'メールアドレスまたはパスワードが違います。';
+        $debug = "DBと照合した結果、入力されたメアドとパスワードの組み合わせが見つかりませんでした。";
+    }        
+}else{
+    $debug = "クッキー上のトークンがデータベースにありません。";
+}
 }elseif($_SERVER['REQUEST_METHOD'] === 'POST'){
     $debug = "クッキーがありません。";
         require_once 'db.php';
@@ -105,20 +106,21 @@ if(isset($_SESSION['user_id'])) {
                 'samesite' => 'Lax',
             ]);
 
-            if (isset($_SESSION['redirect_after_login'])) {
-                $redirect = $_SESSION['redirect_after_login'];
-                unset($_SESSION['redirect_after_login']);
-
-                // オープンリダイレクト対策: 自サイト内の相対パスであることを確認
-                if (strpos($redirect, '/') === 0 && strpos($redirect, '//') !== 0) {
-                    header("Location: " . $redirect);
-                    exit;
+            if(isset($_GET['to'])){
+                if(isset($_GET['username'])){
+                    $redirect = htmlspecialchars($_GET['to']);
+                    $username = htmlspecialchars($_GET['username']);
+                    header('Location:'.$redirect.'?username='.$username);
+                    exit();
+                }else{
+                    $redirect = htmlspecialchars($_GET['to']);
+                    header('Location:' . $redirect);
+                    exit();
                 }
+            } else {
+                header('Location: timeline.php');
+                exit();
             }
-
-            // デフォルトの遷移先(従来通り)
-            header("Location: /timeline.php");
-            exit;
         } else {
             $error = 'メールアドレスまたはパスワードが違います。';
         }        
@@ -140,7 +142,7 @@ if($files !== false && count($files) > 0) {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TaneLog - 学ぶ人のための投稿・交流アプリ</title>
-        <meta name="description" content="TaneLogはプログラミングを学ぶ人のための投稿・交流アプリです。学習ログをタイムラインに投稿したり、記事を書いて知識をストックしたり、いいね・リプライで他の学習者とつながれます。">
+        <meta name="description" content="TaneLogはPHPを学ぶ人のための投稿・交流アプリです。学習ログをタイムラインに投稿したり、記事を書いて知識をストックしたり、いいね・リプライで他の学習者とつながれます。">
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#fef8e5">
         <link rel="apple-touch-icon" href="/icons/icon-192.png">
@@ -431,23 +433,12 @@ if($files !== false && count($files) > 0) {
                 </div>
                     
                     <h2>ログイン</h2>
-                    <?php if (isset($_SESSION['redirect_after_login'])){$error = "ページにアクセスするにはまずログインしてください。";}?>
+
                     <?php if (isset($error)): ?>
                         <div class="error-msg"><?= htmlspecialchars($error) ?></div>
                     <?php endif; ?>
 
-                    <form action="<?php
-                        if (isset($_GET['to'])) {
-                            if (isset($_GET['username'])) {
-                                $url = "?to=" . htmlspecialchars($_GET['to']) . "&username=" . htmlspecialchars($_GET['username']);
-                            } else {
-                                $url = "?to=" . htmlspecialchars($_GET['to']);
-                            }
-                            echo "index.php" . $url;
-                        } else {
-                            echo "index.php";
-                        }
-                    ?>" method="post">
+                    <form action="index.php" method="post">
                         <div class="form-group">
                             <label>メールアドレス</label>
                             <input type="email" name="email" placeholder="example@email.com" required value="<?php if(isset($email)) {echo htmlspecialchars($email);} ?>">

@@ -16,13 +16,13 @@ if(!isset($_SESSION['user_id'])) {
         try{
             $stmt = $pdo->prepare("SELECT * FROM users WHERE remember_token = ?");
             $stmt->execute([$token]);
-            $user = $stmt->fetch();            
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);            
         }catch(PDOException $e){
-
+            header('Location:'.__DIR__.'/../dberror.php');
         }
 
         if(!$user){ // DBにない
-            // echo "クッキーのトークンがDBと一致しません。";
+            //echo "クッキーのトークンがDBと一致しません。";
             $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
             header('Location: /login.php');
             exit;
