@@ -40,13 +40,17 @@ try{
     $stmt->execute([$_SESSION['user_id']]);
     $followerIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
     // 通知送信（投稿者自身のニックネームを本文に含める）
+    $content_preview = mb_strlen($content) > 30
+        ? mb_substr($content, 0, 30) . '…'
+        : $content;
+
     sendPushNotification(
         $pdo,
         $followerIds,
         'TaneLog',
-        $_SESSION['nickname'] . 'さんが新しい投稿をしました',
-        '/detail.php?contentid='.$content_id
-    );    
+        $_SESSION['nickname'] . 'さんが新しい投稿をしました：' . $content_preview,
+        '/detail.php?contentid=' . $content_id
+    );
 }catch(PDOException $e){
     error_log('Push notification failed:'.$e->getMessage());
 }

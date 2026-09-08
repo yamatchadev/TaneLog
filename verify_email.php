@@ -1,36 +1,36 @@
 <?php
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/secret.php';
+$error = "";
 
-require_once __DIR__.'/db.php';
-$error = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nickname = trim($_POST['nickname']);
-    $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $pass = $_POST['pass'];
-    $pass_con = $_POST['pass_con'];
-
-    if ($nickname === '' || $username === '' || $email === '' || $pass === '') {
-        $error = 'すべての項目を入力してください。';
-    } elseif ($pass === $pass_con) {
-        $stmt_email = $pdo->prepare("SELECT EXISTS (SELECT 1 FROM users WHERE email = ?)");
-        $stmt_email->execute([$email]);
-        $emailexist = $stmt_email->fetchColumn();
-        if((int)$emailexist === 0){
-            $hash = password_hash($pass, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare(
-                "INSERT INTO users (nickname, username, email, password) VALUES (?, ?, ?, ?)"
-            );
-            $stmt->execute([$nickname, $username, $email, $hash]);
-            header('Location: login.php');
-            exit;            
+if(isset($_GET['token'])){
+    $token = htmlspecialchars($_GET['token']);
+    $stmt = $pdo->prepare("SELECT * FROM pre_users WHERE token = ?");
+    $stmt->execute([$token]);
+    $valid_token = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($valid_token){
+        if(isset($_POST['verify_code'])){
+            $verify_code = htmlspecialchars($_POST['verify_code']);
+            $stmt = $pdo->prepare("SELECT * FROM pre_users WHERE token = ? AND created_at > now - interval 24 hour");
+            $stmt->execute([$token]);
+            $verified_user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($verified_user == true && $_POST['verify_code'] == $verified_user['verify_code']){
+                $_SESSION['register_token'] = $verified_user['token'];
+                header('Location: register.php');
+            }else{
+                $error = "認証コードが違うか、有効期限が切れています。";
+            }        
         }else{
-            $error = "既に登録されているメールアドレスです。";
-        }
-    } else {
-        $error = "パスワードが一致していません。";
+        }        
+    }else{
+        $error = "トークンが無効です。";
     }
+}else{
+    $_SESSION['error'] = "無効なリクエストです。";
+    header('Location: register.php');
+    exit;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -159,28 +159,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="error-msg"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
-            <form action="register.php" method="post">
+            <form action="verify_email.php" method="post">
                 <div class="form-group">
-                    <label>ニックネーム</label>
-                    <input type="text" name="nickname" placeholder="めいじろうLOVE" required value="<?php if(isset($nickname)){echo $nickname;}?>">
+                    <label>認証コード</label>
+                    <input type="text" name="verify_code" required>
                 </div>
-                <div class="form-group">
-                    <label>ユーザー名（@に続く固有のIDです。半角英数字と記号）</label>
-                    <input type="text" name="username" placeholder="Meijiro_fun" required value="<?php if(isset($username)){echo $username;}?>">
-                </div>
-                <div class="form-group">
-                    <label>メールアドレス</label>
-                    <input type="email" name="email" placeholder="example@email.com" required value="<?php if(isset($email)){echo $email;}?>">
-                </div>
-                <div class="form-group">
-                    <label>パスワード</label>
-                    <input type="password" name="pass" placeholder="6文字以上" minlength="6" required value="<?php if(isset($pass)){echo $pass;}?>">
-                </div>
-                <div class="form-group">
-                    <label>パスワードの確認</label>
-                    <input type="password" name="pass_con" placeholder="6文字以上"  minlength="6" required>
-                </div>
-                <button type="submit">アカウントを作成</button>
+                <button type="submit">認証</button>
             </form>
             <p class="link-p">すでにアカウントをお持ちですか？ <a href="login.php">ログイン</a></p>
         </div>
