@@ -1,52 +1,39 @@
 <?php
-
 require_once __DIR__.'/db.php';
-$error = '';
-if(isset($_SESSION['register_token']) && isset($_SESSION['email'])){
-    $stmt=$pdo->prepare("SELECT EXISTS (SELECT * FROM pre_users WHERE token = ? AND email = ?)");
-    $stmt->execute([$_SESSION['register_token'],$_SESSION['email']]);
-    $stmt=$stmt->fetchColumn();
-    if(!$stmt){
-        header("Location: /index.php");
-        exit;
-    }else{
-        $email = $_SESSION['email'];
-        $info = "メールアドレスが認証されました。";
-    }
-}else{
-    header("Location: /index.php");
-    exit;
-}
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nickname = trim($_POST['nickname']);
-    $username = trim($_POST['username']);
-    $pass = $_POST['pass'];
-    $pass_con = $_POST['pass_con'];
+if(isset($_POST['email'])){
 
-    if ($nickname === '' || $username === '' || $email === '' || $pass === '') {
-        $error = 'すべての項目を入力してください。';
-    } elseif ($pass === $pass_con) {
-        $stmt_email = $pdo->prepare("SELECT EXISTS (SELECT 1 FROM users WHERE email = ?)");
-        $stmt_email->execute([$email]);
-        $emailexist = $stmt_email->fetchColumn();
-        if((int)$emailexist === 0){
-            $hash = password_hash($pass, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare(
-                "INSERT INTO users (nickname, username, email, password) VALUES (?, ?, ?, ?)"
-            );
-            $stmt->execute([$nickname, $username, $email, $hash]);
-            header('Location: login.php');
-            exit;            
-        }else{
-            $error = "既に登録されているメールアドレスです。";
+    $code = sprintf('%06d', random_int(0, 999999));
+    $token = bin2hex(random_bytes(16));
+    $email = $_POST['email'];
+    
+    $exist=$pdo->prepare("SELECT EXISTS (SELECT * FROM users WHERE email = ?)");
+    $exist->execute([$email]);
+    $exist=$exist->fetchColumn();
+    if($exist){
+        $error = "そのメールアドレスは既に登録されています。";
+    }else{
+        $stmt=$pdo->prepare("INSERT INTO pre_users (email,verify_code,token) VALUE (?,?,?)");
+        $stmt->execute([$email,$code,$token]);
+
+        require_once 'gmail.php';
+
+        $subject = "【TaneLog】メールアドレス認証";
+        $body = <<<EOT
+            コード認証ページに以下のコードを入力し、メールアドレスを認証してください。
+            認証コード：{$code}
+            ※認証コードの有効期限は２４時間です。
+            もしこのメールに心当たりがない場合は、このメールを無視してください。
+            認証コードは他人に絶対に教えないでください。あなたのメールアドレスを使って第三者がこのサービス（TaneLog）に登録できてしまいます。
+            EOT;
+
+        sendGmail($email, $subject, $body);
+        header("Location:".$_SERVER['REQUEST_URI']. "/../verify_email.php?token=".$token);   
         }
-    } else {
-        $error = "パスワードが一致していません。";
-    }
+
+
 }
 ?>
-<!DOCTYPE html>
-<html lang="ja">
+<html>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -173,9 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </head>
     <body>
         <div class="register-card">
-            <div class="register-card-header"><img src="img/tanelog_login.png" alt="TaneLog Logo" class="logo">
-            </div>
-            <h2>新規アカウント登録</h2>
+            <div class="register-card-header"><img src="img/tanelog_login.png" alt="TaneLog Logo" class="logo"></div>
+            <h2>新規登録：メールアドレス認証</h2>
 
             <?php if (!empty($error)): ?>
                 <div class="error-msg"><?= htmlspecialchars($error) ?></div>
@@ -183,31 +169,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if (!empty($info)):?>
                 <div class="info-msg"><?= $info ?></div>
             <?php endif;?>
-            <form action="register.php" method="post">
+            <form action="send_email.php" method="post">
                 <div class="form-group">
-                    <div class="form-group">
                     <label>メールアドレス</label>
-                    <input type="email" name="email" placeholder="example@email.com" required value="<?= $email;?>" disabled>
+                    <input type="email" name="email" placeholder="example@email.com" required value="<?php if(isset($email)){echo $email;}?>">
                 </div>
-                    <label>ニックネーム</label>
-                    <input type="text" name="nickname" placeholder="めいじろうLOVE" required value="<?php if(isset($nickname)){echo $nickname;}?>">
-                </div>
-                <div class="form-group">
-                    <label>ユーザー名（@に続く固有のIDです。半角英数字と記号）</label>
-                    <input type="text" name="username" placeholder="Meijiro_fun" required value="<?php if(isset($username)){echo $username;}?>">
-                </div>
-
-                <div class="form-group">
-                    <label>パスワード ※６文字以上</label>
-                    <input type="password" name="pass" placeholder="●●●●●●" minlength="6" required value="<?php if(isset($pass)){echo $pass;}?>">
-                </div>
-                <div class="form-group">
-                    <label>パスワードの確認</label>
-                    <input type="password" name="pass_con" placeholder="●●●●●●"  minlength="6" required>
-                </div>
-                <button type="submit">アカウントを作成</button>
+                <button type="submit">送信</button>
             </form>
             <p class="link-p">すでにアカウントをお持ちですか？ <a href="login.php">ログイン</a></p>
         </div>
     </body>
+
 </html>

@@ -4,31 +4,34 @@ require_once __DIR__ . '/secret.php';
 $error = "";
 
 if(isset($_GET['token'])){
-    $token = htmlspecialchars($_GET['token']);
-    $stmt = $pdo->prepare("SELECT * FROM pre_users WHERE token = ?");
+    $info = "メールを送信しました。メールに記載された認証コードを入力してください。";
+    $token = $_GET['token'];
+    $stmt = $pdo->prepare("SELECT * FROM pre_users WHERE token = ? AND verified = 0");
     $stmt->execute([$token]);
     $valid_token = $stmt->fetch(PDO::FETCH_ASSOC);
     if($valid_token){
         if(isset($_POST['verify_code'])){
             $verify_code = htmlspecialchars($_POST['verify_code']);
-            $stmt = $pdo->prepare("SELECT * FROM pre_users WHERE token = ? AND created_at > now - interval 24 hour");
+            $stmt = $pdo->prepare("SELECT * FROM pre_users WHERE token = ? AND created_at > NOW() - interval 24 HOUR");
             $stmt->execute([$token]);
             $verified_user = $stmt->fetch(PDO::FETCH_ASSOC);
-            if($verified_user == true && $_POST['verify_code'] == $verified_user['verify_code']){
+            if($verified_user && $_POST['verify_code'] == $verified_user['verify_code']){
+                $verified = $pdo->prepare("UPDATE pre_users SET verified = 1 WHERE id = ?");
+                $verified->execute([$verified_user['id']]);
+                $_SESSION['email'] = $verified_user['email'];
                 $_SESSION['register_token'] = $verified_user['token'];
                 header('Location: register.php');
+                exit;
             }else{
                 $error = "認証コードが違うか、有効期限が切れています。";
-            }        
-        }else{
-        }        
+            }
+
+        }
     }else{
-        $error = "トークンが無効です。";
+        $error = "URLが期限切れか、誤っています。";
     }
 }else{
-    $_SESSION['error'] = "無効なリクエストです。";
-    header('Location: register.php');
-    exit;
+    $error = "トークンがセットされていません";
 }
 
 ?>
@@ -136,6 +139,15 @@ if(isset($_GET['token'])){
                 margin-bottom: 15px;
                 font-size: 14px;
             }
+            .info-msg {
+                background-color: #f6fff4;
+                color: #1bac2a;
+                border: 1px solid #d7fedd;
+                padding: 10px;
+                border-radius: 6px;
+                margin-bottom: 15px;
+                font-size: 14px;  
+            }
             .link-p {
                 text-align: center;
                 margin-top: 20px;
@@ -158,8 +170,10 @@ if(isset($_GET['token'])){
             <?php if (!empty($error)): ?>
                 <div class="error-msg"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
-
-            <form action="verify_email.php" method="post">
+            <?php if (!empty($info)):?>
+                <div class="info-msg"><?= $info ?></div>
+            <?php endif;?>
+            <form action="verify_email.php?token=<?= $_GET['token']; ?>" method="post">
                 <div class="form-group">
                     <label>認証コード</label>
                     <input type="text" name="verify_code" required>
