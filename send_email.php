@@ -1,41 +1,34 @@
 <?php
-require_once __DIR__ . '/db.php';
-require_once __DIR__ . '/secret.php';
-$error = "";
-
-if(isset($_GET['token'])){
-    $token = $_GET['token'];
-    $stmt = $pdo->prepare("SELECT * FROM pre_users WHERE token = ? AND verified = 0");
-    $stmt->execute([$token]);
-    $valid_token = $stmt->fetch(PDO::FETCH_ASSOC);
-    if($valid_token){
-        if(isset($_POST['verify_code'])){
-            $verify_code = htmlspecialchars($_POST['verify_code']);
-            $stmt = $pdo->prepare("SELECT * FROM pre_users WHERE token = ? AND created_at > NOW() - interval 24 HOUR");
-            $stmt->execute([$token]);
-            $verified_user = $stmt->fetch(PDO::FETCH_ASSOC);
-            if($verified_user && $_POST['verify_code'] == $verified_user['verify_code']){
-                $verified = $pdo->prepare("UPDATE pre_users SET verified = 1 WHERE id = ?");
-                $verified->execute([$verified_user['id']]);
-
-                $_SESSION['register_token'] = $verified_user['token'];
-                header('Location: register.php');
-                exit;
-            }else{
-                $error = "認証コードが違うか、有効期限が切れています。";
-            }
-
-        }
+require_once __DIR__.'/db.php';
+if(isset($_POST['email'])){
+    $code = sprintf('%06d', random_int(0, 999999));
+    $token = bin2hex(random_bytes(16));
+    $email = $_POST['email'];
+    
+    $exist=$pdo->prepare("SELECT EXISTS (SELECT * FROM users WHERE email = ?)");
+    $exist->execute([$email]);
+    $exist=$exist->fetchColumn();
+    if($exist){
+        $error = "そのメールアドレスは既に登録されています。";
     }else{
-        $error = "URLが期限切れか、誤っています。";
-    }
-}else{
-    $error = "トークンがセットされていません";
-}
+        $stmt=$pdo->prepare("INSERT INTO pre_users (email,verify_code,token) VALUE (?,?,?)");
+        $stmt->execute([$email,$code,$token]);
 
+        require_once 'gmail.php';
+
+        $subject = "【TaneLog】メールアドレス認証";
+        $body = <<<EOT
+            認証コード：{$code}
+            EOT;
+
+        sendGmail($email, $subject, $body);
+        header("Location:".$_SERVER['REQUEST_URI']. "/../verify_email.php?token=".$token);   
+        }
+
+
+}
 ?>
-<!DOCTYPE html>
-<html lang="ja">
+<html>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -153,22 +146,22 @@ if(isset($_GET['token'])){
     </head>
     <body>
         <div class="register-card">
-            <div class="register-card-header"><img src="img/tanelog_login.png" alt="TaneLog Logo" class="logo">
-            </div>
-            <h2>新規アカウント登録</h2>
+            <div class="register-card-header"><img src="img/tanelog_login.png" alt="TaneLog Logo" class="logo"></div>
+            <h2>新規登録：メールアドレス認証</h2>
 
             <?php if (!empty($error)): ?>
                 <div class="error-msg"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
-            <form action="verify_email.php?token=<?= $_GET['token']; ?>" method="post">
+            <form action="send_email.php" method="post">
                 <div class="form-group">
-                    <label>認証コード</label>
-                    <input type="text" name="verify_code" required>
+                    <label>メールアドレス</label>
+                    <input type="email" name="email" placeholder="example@email.com" required value="<?php if(isset($email)){echo $email;}?>">
                 </div>
-                <button type="submit">認証</button>
+                <button type="submit">送信</button>
             </form>
             <p class="link-p">すでにアカウントをお持ちですか？ <a href="login.php">ログイン</a></p>
         </div>
     </body>
+
 </html>

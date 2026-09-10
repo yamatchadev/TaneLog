@@ -7,4 +7,3 @@ secret.php
 gettoken.php
 callback.php
 token.json
-/api/notify_function_core.php

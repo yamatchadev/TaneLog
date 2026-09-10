@@ -66,12 +66,12 @@ if(isset($_SESSION['user_id'])) {
             }
 
             if(isset($_SESSION['redirect_after_login'])){
-            header('Location:'.$_SESSION['redirect_after_login']);
-            exit;
-        }else{
-            header('Location: timeline.php');
-            exit;
-        }
+                header('Location:'.$_SESSION['redirect_after_login']);
+                exit;
+            }else{
+                header('Location: timeline.php');
+                exit;
+            }
     } else {
         $error = 'メールアドレスまたはパスワードが違います。';
         $debug = "DBと照合した結果、入力されたメアドとパスワードの組み合わせが見つかりませんでした。";
@@ -106,27 +106,19 @@ if(isset($_SESSION['user_id'])) {
                 'samesite' => 'Lax',
             ]);
 
-            if(isset($_GET['to'])){
-                if(isset($_GET['username'])){
-                    $redirect = htmlspecialchars($_GET['to']);
-                    $username = htmlspecialchars($_GET['username']);
-                    header('Location:'.$redirect.'?username='.$username);
-                    exit();
-                }else{
-                    $redirect = htmlspecialchars($_GET['to']);
-                    header('Location:' . $redirect);
-                    exit();
-                }
-            } else {
-                header('Location: timeline.php');
-                exit();
-            }
-        } else {
-            $error = 'メールアドレスまたはパスワードが違います。';
-        }        
-    } else{
-        $debug = "ポストなしクッキーなし";
-    }
+        if (isset($_SESSION['redirect_after_login'])){
+            header('Location:',$_SESSION['redirect_after_login']);
+            exit;
+        }else{
+            header('Location: timeline.php');
+            exit();
+        }
+    }else{
+        $error = 'メールアドレスまたはパスワードが違います。';
+    }        
+}else{
+    $debug = "ポストなしクッキーなし";
+}
 
 // ランダム背景を決める
 $dirPath = './background/*';
@@ -449,7 +441,7 @@ if($files !== false && count($files) > 0) {
                         </div>
                         <button type="submit">ログイン</button>
                     </form>
-                    <p class="link-p">または <a href="register.php">新規登録</a></p>
+                    <p class="link-p">または <a href="send_email.php">新規登録</a></p>
                 </div>
             </div>
         </section>
