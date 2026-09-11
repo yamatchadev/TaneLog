@@ -171,7 +171,7 @@ $latest_id = !empty($posts) ? $posts[0]['id'] : 0;
                 transition: background 0.2s;
             }
             button:hover:not(#like_button,#menuBtn,#themeToggleBtn) {
-                background-color: #3f533b;
+                background-color: var(--button-hover-color);
             }
 
             /* 投稿リスト */

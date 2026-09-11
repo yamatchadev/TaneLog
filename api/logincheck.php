@@ -7,7 +7,7 @@ if(session_status() === PHP_SESSION_NONE){
 if(!isset($_SESSION['user_id'])) {
     if(!isset($_COOKIE['remember_token'])){ //remember_tokenがないとき
         $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
-        header('Location: /index.php');
+        header('Location: /login.php');
         exit;
     }else{ // remember_tokenがあるとき
         // echo "remember_tokenがクッキー上にあります。";
@@ -24,7 +24,7 @@ if(!isset($_SESSION['user_id'])) {
         if(!$user){ // DBにない
             //echo "クッキーのトークンがDBと一致しません。";
             $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
-            header('Location: /index.php');
+            header('Location: /login.php');
             exit;
         }else{
             // DBにある

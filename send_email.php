@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/db.php';
 if(isset($_POST['email'])){
+
     $code = sprintf('%06d', random_int(0, 999999));
     $token = bin2hex(random_bytes(16));
     $email = $_POST['email'];
@@ -18,7 +19,11 @@ if(isset($_POST['email'])){
 
         $subject = "【TaneLog】メールアドレス認証";
         $body = <<<EOT
+            コード認証ページに以下のコードを入力し、メールアドレスを認証してください。
             認証コード：{$code}
+            ※認証コードの有効期限は２４時間です。
+            もしこのメールに心当たりがない場合は、このメールを無視してください。
+            認証コードは他人に絶対に教えないでください。あなたのメールアドレスを使って第三者がこのサービス（TaneLog）に登録できてしまいます。
             EOT;
 
         sendGmail($email, $subject, $body);
@@ -131,6 +136,15 @@ if(isset($_POST['email'])){
                 margin-bottom: 15px;
                 font-size: 14px;
             }
+            .info-msg {
+                background-color: #f6fff4;
+                color: #1bac2a;
+                border: 1px solid #d7fedd;
+                padding: 10px;
+                border-radius: 6px;
+                margin-bottom: 15px;
+                font-size: 14px;  
+            }
             .link-p {
                 text-align: center;
                 margin-top: 20px;
@@ -152,7 +166,9 @@ if(isset($_POST['email'])){
             <?php if (!empty($error)): ?>
                 <div class="error-msg"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
-
+            <?php if (!empty($info)):?>
+                <div class="info-msg"><?= $info ?></div>
+            <?php endif;?>
             <form action="send_email.php" method="post">
                 <div class="form-group">
                     <label>メールアドレス</label>

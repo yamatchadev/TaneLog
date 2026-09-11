@@ -18,7 +18,7 @@ if(isset($_SESSION['error'])){
     sendGmail($devemail, $subject, $body);
 }else{
     header('Location: timeline.php');
-    exit;
+    exit; // リダイレクト後の処理中断のために追加を推奨
 }
 ?>
 <!DOCTYPE html>

@@ -1,5 +1,4 @@
 <?php
-require_once '../../logincheck.php';
 require_once '../../db.php';
 require_once '../../api/newscheck.php';
 ?>

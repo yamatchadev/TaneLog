@@ -78,15 +78,17 @@ if (isset($_GET['contentid'])) {
         }
     }else{
         $post_error = "投稿が存在しません。コンテンツIDを確認してください。";    
+        $post_not_exist = "yes";
     }
 }else{
     $post_error = "不正なリクエストです。";
 }
-                    
-$iconSrc = ($post['icon_path'] && file_exists(__DIR__ . '/' . $post['icon_path']))
-        ? htmlspecialchars($post['icon_path'])
-: 'https://ui-avatars.com/api/?name=' . urlencode($post['nickname']) . '&background=4F5D95&color=fff';
-                    
+if(!isset($post_not_exist)){
+    $iconSrc = ($post['icon_path'] && file_exists(__DIR__ . '/' . $post['icon_path']))
+            ? htmlspecialchars($post['icon_path'])
+    : 'https://ui-avatars.com/api/?name=' . urlencode($post['nickname']) . '&background=4F5D95&color=fff';
+}        
+
 // ───【追加】ログインユーザーの情報を取得 ───
 $user_stmt = $pdo->prepare("SELECT nickname, icon_path, username FROM users WHERE id = ?");
 $user_stmt->execute([$_SESSION['user_id']]);

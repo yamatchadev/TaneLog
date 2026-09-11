@@ -106,19 +106,19 @@ if(isset($_SESSION['user_id'])) {
                 'samesite' => 'Lax',
             ]);
 
-        if (isset($_SESSION['redirect_after_login'])){
-            header('Location:',$_SESSION['redirect_after_login']);
-            exit;
-        }else{
-            header('Location: timeline.php');
-            exit();
-        }
-    }else{
-        $error = 'メールアドレスまたはパスワードが違います。';
-    }        
-}else{
-    $debug = "ポストなしクッキーなし";
-}
+            if(isset($_SESSION['redirect_after_login'])){
+                header('Location:'.$_SESSION['redirect_after_login']);
+                exit;
+            }else{
+                header('Location: timeline.php');
+                exit;
+            }
+        } else {
+            $error = 'メールアドレスまたはパスワードが違います。';
+        }        
+    } else{
+        $debug = "ポストなしクッキーなし";
+    }
 
 // ランダム背景を決める
 $dirPath = './background/*';
@@ -428,6 +428,9 @@ if($files !== false && count($files) > 0) {
 
                     <?php if (isset($error)): ?>
                         <div class="error-msg"><?= htmlspecialchars($error) ?></div>
+                    <?php endif; ?>
+                    <?php if (isset($_SESSION['redirect_after_login'])):?>
+                        <div class="error-msg">このページにアクセスするにはログインしてください。</div>
                     <?php endif; ?>
 
                     <form action="index.php" method="post">

@@ -2,11 +2,24 @@
 
 require_once __DIR__.'/db.php';
 $error = '';
-
+if(isset($_SESSION['register_token']) && isset($_SESSION['email'])){
+    $stmt=$pdo->prepare("SELECT EXISTS (SELECT * FROM pre_users WHERE token = ? AND email = ?)");
+    $stmt->execute([$_SESSION['register_token'],$_SESSION['email']]);
+    $stmt=$stmt->fetchColumn();
+    if(!$stmt){
+        header("Location: /index.php");
+        exit;
+    }else{
+        $email = $_SESSION['email'];
+        $info = "メールアドレスが認証されました。";
+    }
+}else{
+    header("Location: /index.php");
+    exit;
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nickname = trim($_POST['nickname']);
     $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
     $pass = $_POST['pass'];
     $pass_con = $_POST['pass_con'];
 
@@ -136,6 +149,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 margin-bottom: 15px;
                 font-size: 14px;
             }
+            .info-msg {
+                background-color: #f6fff4;
+                color: #1bac2a;
+                border: 1px solid #d7fedd;
+                padding: 10px;
+                border-radius: 6px;
+                margin-bottom: 15px;
+                font-size: 14px;  
+            }
             .link-p {
                 text-align: center;
                 margin-top: 20px;
@@ -158,9 +180,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if (!empty($error)): ?>
                 <div class="error-msg"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
-
+            <?php if (!empty($info)):?>
+                <div class="info-msg"><?= $info ?></div>
+            <?php endif;?>
             <form action="register.php" method="post">
                 <div class="form-group">
+                    <div class="form-group">
+                    <label>メールアドレス</label>
+                    <input type="email" name="email" placeholder="example@email.com" required value="<?= $email;?>" disabled>
+                </div>
                     <label>ニックネーム</label>
                     <input type="text" name="nickname" placeholder="めいじろうLOVE" required value="<?php if(isset($nickname)){echo $nickname;}?>">
                 </div>
@@ -168,17 +196,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label>ユーザー名（@に続く固有のIDです。半角英数字と記号）</label>
                     <input type="text" name="username" placeholder="Meijiro_fun" required value="<?php if(isset($username)){echo $username;}?>">
                 </div>
+
                 <div class="form-group">
-                    <label>メールアドレス</label>
-                    <input type="email" name="email" placeholder="example@email.com" required value="<?php if(isset($email)){echo $email;}?>">
-                </div>
-                <div class="form-group">
-                    <label>パスワード</label>
-                    <input type="password" name="pass" placeholder="6文字以上" minlength="6" required value="<?php if(isset($pass)){echo $pass;}?>">
+                    <label>パスワード ※６文字以上</label>
+                    <input type="password" name="pass" placeholder="●●●●●●" minlength="6" required value="<?php if(isset($pass)){echo $pass;}?>">
                 </div>
                 <div class="form-group">
                     <label>パスワードの確認</label>
-                    <input type="password" name="pass_con" placeholder="6文字以上"  minlength="6" required>
+                    <input type="password" name="pass_con" placeholder="●●●●●●"  minlength="6" required>
                 </div>
                 <button type="submit">アカウントを作成</button>
             </form>
