@@ -287,3 +287,57 @@
 [2026-09-10 14:45:32] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
 [2026-09-10 14:45:32] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
 [2026-09-10 14:45:32] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:20] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：oihgrdoigoihgsdi","url":"\/detail.php?contentid=450547622592657"}
+[2026-09-11 08:39:20] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：oihgrdoigoihgsdi","url":"\/detail.php?contentid=670351085863815"}
+[2026-09-11 08:39:20] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：oihgrdoigoihgsdi","url":"\/detail.php?contentid=933667947491170"}
+[2026-09-11 08:39:20] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：oihgrdoigoihgsdi","url":"\/detail.php?contentid=874155084454186"}
+[2026-09-11 08:39:20] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：oihgrdoigoihgsdi","url":"\/detail.php?contentid=641487708676621"}
+[2026-09-11 08:39:20] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：oihgrdoigoihgsdi","url":"\/detail.php?contentid=568609770069859"}
+[2026-09-11 08:39:20] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：oihgrdoigoihgsdi","url":"\/detail.php?contentid=110023510587209"}
+[2026-09-11 08:39:21] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?)
+[2026-09-11 08:39:21] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?)
+[2026-09-11 08:39:21] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?)
+[2026-09-11 08:39:21] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?)
+[2026-09-11 08:39:21] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?)
+[2026-09-11 08:39:21] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?)
+[2026-09-11 08:39:21] 取得した購読数: 4
+[2026-09-11 08:39:21] 取得した購読数: 4
+[2026-09-11 08:39:21] 取得した購読数: 4
+[2026-09-11 08:39:21] 取得した購読数: 4
+[2026-09-11 08:39:21] 取得した購読数: 4
+[2026-09-11 08:39:21] 取得した購読数: 4
+[2026-09-11 08:39:21] 取得した購読数: 4
+[2026-09-11 08:39:24] 送信失敗: https://fcm.googleapis.com/fcm/send/cW5RhFG-3UY:APA91bHwOQ7OS7SkskGr3_xaiHT0BMGhIoG1SDFL9sgt_yOhaU2bjIa1l-gblsLKjuU25esgvotLwfYcayeDuSwDeiLqlHwRQiWxaQiER5q3JNqwi3I1zXcpUf6MR9gC1l1MPG_LAPQA 理由: Gone
+[2026-09-11 08:39:24] 送信失敗: https://fcm.googleapis.com/fcm/send/cW5RhFG-3UY:APA91bHwOQ7OS7SkskGr3_xaiHT0BMGhIoG1SDFL9sgt_yOhaU2bjIa1l-gblsLKjuU25esgvotLwfYcayeDuSwDeiLqlHwRQiWxaQiER5q3JNqwi3I1zXcpUf6MR9gC1l1MPG_LAPQA 理由: Gone
+[2026-09-11 08:39:24] 送信失敗: https://fcm.googleapis.com/fcm/send/cW5RhFG-3UY:APA91bHwOQ7OS7SkskGr3_xaiHT0BMGhIoG1SDFL9sgt_yOhaU2bjIa1l-gblsLKjuU25esgvotLwfYcayeDuSwDeiLqlHwRQiWxaQiER5q3JNqwi3I1zXcpUf6MR9gC1l1MPG_LAPQA 理由: Gone
+[2026-09-11 08:39:24] 送信失敗: https://fcm.googleapis.com/fcm/send/cW5RhFG-3UY:APA91bHwOQ7OS7SkskGr3_xaiHT0BMGhIoG1SDFL9sgt_yOhaU2bjIa1l-gblsLKjuU25esgvotLwfYcayeDuSwDeiLqlHwRQiWxaQiER5q3JNqwi3I1zXcpUf6MR9gC1l1MPG_LAPQA 理由: Gone
+[2026-09-11 08:39:24] 送信失敗: https://fcm.googleapis.com/fcm/send/cW5RhFG-3UY:APA91bHwOQ7OS7SkskGr3_xaiHT0BMGhIoG1SDFL9sgt_yOhaU2bjIa1l-gblsLKjuU25esgvotLwfYcayeDuSwDeiLqlHwRQiWxaQiER5q3JNqwi3I1zXcpUf6MR9gC1l1MPG_LAPQA 理由: Gone
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました
+[2026-09-11 08:39:25] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-11 08:39:25] 通知送信処理が正常に完了しました

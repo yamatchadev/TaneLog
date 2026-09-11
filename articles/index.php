@@ -46,9 +46,8 @@ $tag_list = array_values(array_unique($tag_list));
   <title>記事一覧 | LearnPHP</title>
 
   <link rel="stylesheet" id="theme-link" href="../css/style-light.css">
-  <link rel="stylesheet" href="css/article.css">
-  <script src="../js/sidemenu.js"></script>
-  <script src="../js/theme.js"></script>
+  <script src="/../js/sidemenu.js"></script>
+  <script src="/../js/theme.js"></script>
   <style>
     body {
       margin: 0;
