@@ -28,7 +28,8 @@ if(isset($_GET['token'])){
 
         }
     }else{
-        $error = "URLが期限切れか、誤っています。";
+        $error = "URLが期限切れか、誤っています。再度認証してください。";
+        header("Refresh: 3; url=/index.php");
     }
 }else{
     $error = "トークンがセットされていません";

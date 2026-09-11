@@ -1,34 +1,40 @@
 <?php
 require_once __DIR__.'/db.php';
 if(isset($_POST['email'])){
-
-    $code = sprintf('%06d', random_int(0, 999999));
-    $token = bin2hex(random_bytes(16));
-    $email = $_POST['email'];
+    if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        $email = $_POST['email'];
+        $code = sprintf('%06d', random_int(0, 999999));
+        $token = bin2hex(random_bytes(16));
     
-    $exist=$pdo->prepare("SELECT EXISTS (SELECT * FROM users WHERE email = ?)");
-    $exist->execute([$email]);
-    $exist=$exist->fetchColumn();
-    if($exist){
-        $error = "そのメールアドレスは既に登録されています。";
-    }else{
-        $stmt=$pdo->prepare("INSERT INTO pre_users (email,verify_code,token) VALUE (?,?,?)");
-        $stmt->execute([$email,$code,$token]);
+        $exist=$pdo->prepare("SELECT EXISTS (SELECT * FROM users WHERE email = ?)");
+        $exist->execute([$email]);
+        $exist=$exist->fetchColumn();
+        if($exist){
+            $error = "そのメールアドレスは既に登録されています。";
+        }else{
+            $stmt=$pdo->prepare("INSERT INTO pre_users (email,verify_code,token) VALUE (?,?,?)");
+            $stmt->execute([$email,$code,$token]);
 
-        require_once 'gmail.php';
+            require_once 'gmail.php';
 
-        $subject = "【TaneLog】メールアドレス認証";
-        $body = <<<EOT
-            コード認証ページに以下のコードを入力し、メールアドレスを認証してください。
-            認証コード：{$code}
-            ※認証コードの有効期限は２４時間です。
-            もしこのメールに心当たりがない場合は、このメールを無視してください。
-            認証コードは他人に絶対に教えないでください。あなたのメールアドレスを使って第三者がこのサービス（TaneLog）に登録できてしまいます。
-            EOT;
+            $subject = "【TaneLog】メールアドレス認証";
+            $body = <<<EOT
+                コード認証ページに以下のコードを入力し、メールアドレスを認証してください。
+                認証コード：{$code}
+                ※認証コードの有効期限は２４時間です。
+                もしこのメールに心当たりがない場合は、このメールを無視してください。
+                認証コードは他人に絶対に教えないでください。あなたのメールアドレスを使って第三者がこのサービス（TaneLog）に登録できてしまいます。
+                EOT;
 
-        sendGmail($email, $subject, $body);
-        header("Location:".$_SERVER['REQUEST_URI']. "/../verify_email.php?token=".$token);   
-        }
+            sendGmail($email, $subject, $body);
+            header("Location:".$_SERVER['REQUEST_URI']. "/../verify_email.php?token=".$token);   
+            }
+
+    } else {
+        $error = "メールアドレスが無効です。";
+        $email = htmlspecialchars($_POST['email']);
+    }
+
 
 
 }
@@ -161,7 +167,7 @@ if(isset($_POST['email'])){
     <body>
         <div class="register-card">
             <div class="register-card-header"><img src="img/tanelog_login.png" alt="TaneLog Logo" class="logo"></div>
-            <h2>新規登録：メールアドレス認証</h2>
+            <h2>新規登録</h2>
 
             <?php if (!empty($error)): ?>
                 <div class="error-msg"><?= htmlspecialchars($error) ?></div>
