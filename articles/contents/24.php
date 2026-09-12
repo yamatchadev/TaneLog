@@ -154,7 +154,7 @@ require_once '../../api/newscheck.php';
   <main class="article-layout">
 
     <div class="article-thumbnail">
-      <img src="../thumbnails/20.jpg" alt="記事サムネイル">
+      <img src="../thumbnails/24.png" alt="記事サムネイル">
     </div>
 
     <div class="article-meta">
