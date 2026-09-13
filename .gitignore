@@ -7,3 +7,4 @@ secret.php
 gettoken.php
 callback.php
 token.json
+/api/notify_cli.log
