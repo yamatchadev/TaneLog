@@ -5,14 +5,16 @@ if (isset($_GET['username'])) {
     $username = htmlspecialchars($_GET['username']);
     $stmt = $pdo->prepare("SELECT id, icon_path, created_at, profile_statement, nickname FROM users WHERE username = ?");
     $stmt->execute([$username]);
-    $user = $stmt->fetch();
-    $time = mb_substr($user['created_at'], 0, 10);
-
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);    
     // ユーザーが存在しない場合のフォールバック
     if (!$user) {
-        header('Location: timeline.php');
+        $error = "ユーザー(".$username.")が存在しません。";
+        echo $error;
         exit;
     }
+    $time = mb_substr($user['created_at'], 0, 10);
+
+
     // フォローフォロワー取得
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM follows WHERE followed_id = ?");
     $stmt->execute([$user['id']]);
@@ -32,15 +34,41 @@ if (isset($_GET['username'])) {
     }
 
     //投稿表示
-    $stmt = $pdo->prepare("SELECT * FROM posts WHERE user_id = ? AND deleted = 0 ORDER BY created_at DESC");
-    $stmt->execute([$user['id']]);
+    $stmt = $pdo->prepare("SELECT posts.*,
+       users.nickname, users.icon_path, users.username,
+       COUNT(DISTINCT likes.id) AS like_count,
+       COUNT(DISTINCT replies.id) AS reply_count,
+       SUM(CASE WHEN likes.user_id = ? THEN 1 ELSE 0 END) AS liked_by_me
+     FROM posts
+     JOIN users ON posts.user_id = users.id
+     LEFT JOIN posts AS replies ON replies.parent_id = posts.id
+     LEFT JOIN likes ON likes.post_id = posts.id
+     WHERE posts.parent_id IS NULL AND posts.deleted = 0 AND posts.user_id = ?
+     GROUP BY posts.id
+     ORDER BY posts.created_at DESC");
+    $stmt->execute([$user['id'],$user['id']]);
     $userPosts = $stmt->fetchAll();
 
     $currentIcon = $user['icon_path'];
     $iconSrc = ($currentIcon && file_exists(__DIR__ . '/' . $currentIcon))
     ? htmlspecialchars($currentIcon)
     : 'https://ui-avatars.com/api/?name=' . urlencode($user['nickname'] ?? 'U') . '&background=4F5D95&color=fff';
+    // ── 添付ファイルを一括取得 ──
+    $post_ids = array_column($userPosts, 'id');
+    $attachments_map = [];
+
+    if (!empty($post_ids)) {
+        $placeholders = implode(',', array_fill(0, count($post_ids), '?'));
+        $att_stmt = $pdo->prepare(
+            "SELECT * FROM attachments WHERE post_id IN ($placeholders) ORDER BY id ASC"
+        );
+        $att_stmt->execute($post_ids);
+        foreach ($att_stmt->fetchAll() as $att) {
+            $attachments_map[$att['post_id']][] = $att;
+        }   
+    }
 }
+
 function linkifyContent($rawText) {
     // 1. HTMLエスケープ
     $escaped = htmlspecialchars($rawText, ENT_QUOTES, 'UTF-8');
@@ -460,24 +488,52 @@ function linkifyContent($rawText) {
             <main class="main-content">
                 <?php if (!empty($userPosts)): ?>
                     <?php foreach ($userPosts as $p): ?>
-                        <div class="post-card">
-                            <a href="detail.php?contentid=<?= htmlspecialchars($p['content_id']) ?>" class="post-card-link" aria-label="投稿の詳細を見る"></a>
-                            <div class="post-header">
-                                <img src="<?= $iconSrc ?>" alt="アイコン" class="post-icon">
-                                <div class="post-meta">
-                                    <div class="post-name-row">
-                                        <div class="post-nickname"><?= htmlspecialchars($user['nickname']) ?></div>
-                                        <div class="post-username">@<?= htmlspecialchars($username) ?></div>
-                                    </div>
+                <div class="post-card">
+                    
+                    <a href="detail.php?contentid=<?= htmlspecialchars($p['content_id']) ?>" class="post-card-link" aria-label="投稿の詳細を見る"></a>
+
+                        <div class="post-header">
+                            <a href="profile.php?username=<?= htmlspecialchars($p['username']) ?>" class="front-link"><img src="<?= $iconSrc ?>" alt="アイコン" class="post-icon"></a>
+                            <div class="post-meta">
+                                <div class="post-name-row">
+                                    <div class="post-nickname"><?= htmlspecialchars($p['nickname']) ?></div>
+                                    <div class="post-username"><a href="profile.php?username=<?= htmlspecialchars($p['username']); ?>" class="front-link" style="color: #a0aec0">@<?= htmlspecialchars($p['username']) ?></a></div>
                                 </div>
                             </div>
-                            
-                            <!-- 投稿内容 (カラム名は適宜変更してください) -->
-                            <p class="post-content"><?= linkifyContent($p['content'] ?? '（投稿内容）') ?></p>
-                            
-                            <div class="post-time"><?= htmlspecialchars(mb_substr($p['created_at'], 0, 16)) ?></div>
                         </div>
-                    <?php endforeach; ?>
+                        <p class="post-content"><?= linkifyContent($p['content']) ?></p>
+
+                        <!-- 添付ファイル -->
+                        <?php if (!empty($attachments_map[$p['id']])): ?>
+                            <div class="attachment-list front-link">
+                                <?php foreach ($attachments_map[$p['id']] as $att): ?>
+                                    <a href="download_page.php?id=<?= $att['id'] ?>" 
+                                        class="attachment-item front-link" 
+                                        target="_blank">
+                                            📁 <?= htmlspecialchars($att['original_name']) ?>
+                                            <span class="attachment-size">(<?= number_format($att['file_size'] / 1024 / 1024, 1) ?>MB)</span>
+                                        </a>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+<div class="post-actions front-link">
+    <a href="detail.php?contentid=<?= htmlspecialchars($p['content_id']) ?>&reply=1" class="action-btn reply-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span class="action-count"><?= (int)$p['reply_count'] ?></span>
+    </a>
+
+    <button id="like_button" class="action-btn like-btn <?= $p['liked_by_me'] ? 'liked' : '' ?>" data-content-id="<?= htmlspecialchars($p['content_id']) ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        <span class="like-count"><?= (int)$p['like_count'] ?></span>
+    </button>
+</div>
+                        <div class="post-time"><?= htmlspecialchars($p['created_at']) ?></div>
+                    </div>
+                <?php endforeach; ?>
                 <?php else: ?>
                     <div class="no-posts">まだ投稿がありません。</div>
                 <?php endif; ?>

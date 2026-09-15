@@ -708,7 +708,7 @@ function linkifyContent($rawText) {
 <?php require_once 'header.php';?>
         <main class="container">
             <div class="back-nav">
-                <a href="<?php echo $_SERVER['HTTP_REFERER'] ?? 'timeline.php';?>" class="back-link">← 戻る</a>
+                <a href="<?php if($post['deleted'] == 0){echo $_SERVER['HTTP_REFERER'] ?? 'timeline.php';}else{echo "timeline.php";}?>" class="back-link">← 戻る</a>
             </div>
             <?php if(isset($post_error)):?>
             <div class="error-msg"><?php echo $post_error;?></div>

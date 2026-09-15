@@ -168,7 +168,7 @@ require_once '../../api/newscheck.php';
     </div>
 
     <h1 class="article-title">新規登録にメール認証を追加する — 仮登録テーブルとコード認証の実装</h1>
-    <p class="article-date">2025年</p>
+    <p class="article-date">2026/09/10</p>
 
     <hr class="article-divider">
 

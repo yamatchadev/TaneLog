@@ -7,7 +7,7 @@ require_once __DIR__.'/../api/newscheck.php';
 $keyword = trim($_GET['q']   ?? '');
 $tag     = trim($_GET['tag'] ?? '');
 
-// ── 記事一覧取得（動的WHERE） ──
+// ── 記事一覧取得（動的WHERE）──
 $sql    = "SELECT * FROM articles WHERE 1=1";
 $params = [];
 
@@ -15,7 +15,6 @@ if ($keyword !== '') {
     $sql     .= " AND title LIKE ?";
     $params[] = "%{$keyword}%";
 }
-
 if ($tag !== '') {
     $sql     .= " AND tags LIKE ?";
     $params[] = "%{$tag}%";
@@ -27,10 +26,10 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $articles = $stmt->fetchAll();
 
-// ── タグ一覧生成（全記事のtagsから重複排除） ──
-$all = $pdo->query("SELECT tags FROM articles WHERE tags IS NOT NULL AND tags != ''")->fetchAll();
+// ── サイドバー用タグ一覧（全記事から重複排除）──
+$all_tags_stmt = $pdo->query("SELECT tags FROM articles WHERE tags IS NOT NULL AND tags != ''");
 $tag_list = [];
-foreach ($all as $row) {
+foreach ($all_tags_stmt->fetchAll() as $row) {
     foreach (explode(',', $row['tags']) as $t) {
         $t = trim($t);
         if ($t !== '') $tag_list[] = $t;
@@ -43,12 +42,13 @@ $tag_list = array_values(array_unique($tag_list));
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>記事一覧 | LearnPHP</title>
+  <title>記事 | LearnPHP</title>
 
-  <link rel="stylesheet" id="theme-link" href="../css/style-light.css">
-  <script src="/../js/sidemenu.js"></script>
-  <script src="/../js/theme.js"></script>
+  <link rel="stylesheet" id="theme-link" href="/../css/style-light.css">
+  <link rel="stylesheet" href="css/article.css">
+
   <style>
+    /* ── timeline.php から持ってきたヘッダー・サイドメニュー用スタイル ── */
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -59,7 +59,6 @@ $tag_list = array_values(array_unique($tag_list));
       display: flex;
       flex-direction: column;
       gap: 8px;
-      justify-content: space-between;
       align-items: center;
       padding: 12px 20px;
       background-color: var(--card-bg);
@@ -102,13 +101,14 @@ $tag_list = array_values(array_unique($tag_list));
 </head>
 <body>
 
+  <!-- ════ timeline.php と同一のヘッダー ════ -->
   <header>
     <div id="header-top">
-      <h1><?= $recentnewsdate ?> <?= $recentnews ?><a href="../news.php">詳細</a></h1>
+      <h1><?= $recentnewsdate ?> <?= $recentnews ?><a href="/../<?= $recentnewsurl ?>">詳細</a></h1>
     </div>
     <div class="header-main-row">
       <div>
-        <a href="../timeline.php"><img src="../img/logo_light.png" alt="LearnPHP" id="headerLogo"></a>
+        <a href="../timeline.php"><img src="../img/tanelog.png" alt="TaneLog" id="headerLogo"></a>
       </div>
       <div class="header-actions">
         <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="テーマ切り替え">🌙</button>
@@ -120,12 +120,13 @@ $tag_list = array_values(array_unique($tag_list));
   </header>
 
   <?php require '../sidemenu.php'; ?>
+  <!-- ════════════════════════════════════════ -->
 
-  <!-- ── ページ見出し ── -->
+  <!-- ページ見出し -->
   <h2 class="index-heading">記事</h2>
 
-  <!-- ── キーワード検索 ── -->
-  <form class="index-search" action="index.php" method="get">
+  <!-- キーワード検索バー -->
+  <form class="index-search" action="" method="get">
     <?php if ($tag !== ''): ?>
       <input type="hidden" name="tag" value="<?= htmlspecialchars($tag) ?>">
     <?php endif; ?>
@@ -138,81 +139,105 @@ $tag_list = array_values(array_unique($tag_list));
     <button type="submit">検索</button>
   </form>
 
+  <!-- メインレイアウト（サイドバー＋グリッド） -->
   <div class="index-layout">
 
     <!-- ── 左サイドバー ── -->
-    <nav class="index-sidebar">
-      <div class="sidebar-label">タグ</div>
+    <aside class="index-sidebar">
+      <p class="sidebar-label">タグ</p>
       <ul class="sidebar-tag-list">
         <li>
-          <a href="index.php<?= $keyword !== '' ? '?q='.urlencode($keyword) : '' ?>"
-             class="<?= $tag === '' ? 'active' : '' ?>">
+          <a href="?"
+            class="<?= ($tag === '' && $keyword === '') ? 'active' : '' ?>">
             全て
           </a>
         </li>
         <?php foreach ($tag_list as $t): ?>
-        <li>
-          <a href="index.php?tag=<?= urlencode($t) ?><?= $keyword !== '' ? '&q='.urlencode($keyword) : '' ?>"
-             class="<?= $tag === $t ? 'active' : '' ?>">
-            <?= htmlspecialchars($t) ?>
-          </a>
-        </li>
+          <li>
+            <a href="?tag=<?= urlencode($t) ?>"
+              class="<?= ($tag === $t) ? 'active' : '' ?>">
+              <?= htmlspecialchars($t) ?>
+            </a>
+          </li>
         <?php endforeach; ?>
       </ul>
-    </nav>
+    </aside>
 
-    <!-- ── 記事グリッド ── -->
+    <!-- ── 右：記事グリッド ── -->
     <main class="index-main">
       <div class="article-grid">
-
         <?php if (empty($articles)): ?>
-          <div class="no-results">記事が見つかりませんでした。</div>
-
+          <p class="no-results">記事が見つかりませんでした。</p>
         <?php else: ?>
-          <?php foreach ($articles as $a):
-            $thumb_path = __DIR__ . '/thumbnails/' . $a['id'] . '.png';
-            $has_thumb  = file_exists($thumb_path);
-            $tags_arr   = $a['tags'] ? array_map('trim', explode(',', $a['tags'])) : [];
-            $date_str   = date('Y年n月j日', strtotime($a['created_at']));
-          ?>
-          <a class="article-card" href="contents/<?= (int)$a['id'] ?>.php">
-
-            <?php if ($has_thumb): ?>
-              <img
-                class="card-thumb"
-                src="thumbnails/<?= (int)$a['id'] ?>.png"
-                alt="<?= htmlspecialchars($a['title']) ?>"
-              >
-            <?php else: ?>
-              <div class="card-thumb-placeholder">📄</div>
-            <?php endif; ?>
-
-            <div class="card-body">
-              <div class="card-title"><?= htmlspecialchars($a['title']) ?></div>
-
-              <?php if (!empty($tags_arr)): ?>
-              <div class="card-tags">
-                <?php foreach ($tags_arr as $t): ?>
-                  <span class="tag"><?= htmlspecialchars($t) ?></span>
-                <?php endforeach; ?>
-              </div>
+          <?php foreach ($articles as $a): ?>
+            <?php
+              $thumb_path = __DIR__ . '/thumbnails/' . $a['id'] . '.png';
+              $thumb_src  = file_exists($thumb_path)
+                ? 'thumbnails/' . $a['id'] . '.png'
+                : null;
+              $tags = array_filter(array_map('trim', explode(',', $a['tags'] ?? '')));
+              $date = date('Y年m月d日', strtotime($a['created_at']));
+            ?>
+            <a class="article-card" href="content/<?= $a['id'] ?>.php">
+              <?php if ($thumb_src): ?>
+                <img class="card-thumb" src="<?= htmlspecialchars($thumb_src) ?>" alt="<?= htmlspecialchars($a['title']) ?>">
+              <?php else: ?>
+                <div class="card-thumb-placeholder">📄</div>
               <?php endif; ?>
 
-              <div class="card-date"><?= $date_str ?></div>
-            </div>
-
-          </a>
+              <div class="card-body">
+                <p class="card-title"><?= htmlspecialchars($a['title']) ?></p>
+                <?php if (!empty($tags)): ?>
+                  <div class="card-tags">
+                    <?php foreach ($tags as $t): ?>
+                      <span class="tag"><?= htmlspecialchars($t) ?></span>
+                    <?php endforeach; ?>
+                  </div>
+                <?php endif; ?>
+                <p class="card-date"><?= $date ?></p>
+              </div>
+            </a>
           <?php endforeach; ?>
         <?php endif; ?>
-
       </div>
     </main>
 
-  </div>
+  </div><!-- /.index-layout -->
 
   <footer class="site-footer">
-    <p>&copy; 2026 TaneLog</p>
+    <p>&copy; 2025 LearnPHP</p>
   </footer>
+
+  <!-- ════ timeline.php と同一のテーマ切り替えJS ════ -->
+  <script>
+    const menuBtn        = document.getElementById('menuBtn');
+    const closeBtn       = document.getElementById('closeBtn');
+    const sideMenu       = document.getElementById('sideMenu');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const headerLogo     = document.getElementById('headerLogo');
+    const themeLink      = document.getElementById('theme-link');
+
+    function updateToggleBtnIcon(theme) {
+      themeToggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    updateToggleBtnIcon(currentTheme);
+    if (headerLogo) headerLogo.src = currentTheme === 'dark' ? '../img/logo_dark.png' : '../img/logo_light.png';
+    if (themeLink)  themeLink.href  = currentTheme === 'dark' ? '../css/style-dark.css' : '../css/style-light.css';
+
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark   = themeLink.href.includes('style-dark.css');
+      const newTheme = isDark ? 'light' : 'dark';
+      themeLink.href  = newTheme === 'dark' ? '../css/style-dark.css' : '../css/style-light.css';
+      updateToggleBtnIcon(newTheme);
+      if (headerLogo) headerLogo.src = newTheme === 'dark' ? '../img/logo_dark.png' : '../img/logo_light.png';
+      localStorage.setItem('theme', newTheme);
+    });
+
+    menuBtn.addEventListener('click',  () => sideMenu.classList.add('active'));
+    closeBtn.addEventListener('click', () => sideMenu.classList.remove('active'));
+  </script>
 
 </body>
 </html>

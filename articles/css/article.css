@@ -1,5 +1,5 @@
 /* =============================================
-   TaneLog — 記事共通スタイルシート
+   LearnPHP — 記事共通スタイルシート
    articles/css/article.css
    ============================================= */
 
@@ -13,11 +13,13 @@
 :root {
   --color-primary:    #6c4fc2;   /* コーポレートパープル */
   --color-primary-lt: #ede9f8;   /* パープル薄め（バッジ背景など） */
+  --color-text:       #1e1e2e;   /* 本文テキスト */
   --color-muted:      #6b7280;   /* 日付・キャプションなど */
   --color-border:     #e5e7eb;   /* 区切り線 */
   --color-bg:         #f9f9fb;   /* ページ背景 */
   --color-surface:    #ffffff;   /* カード・本文背景 */
   --color-code-bg:    #f3f0fb;   /* コードブロック背景 */
+
   --font-body:  'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
   --max-width: 760px;
@@ -27,7 +29,7 @@
 body {
   font-family: var(--font-body);
   background: var(--color-bg);
-  color: var(--text-color);
+  color: var(--color-text);
   line-height: 1.8;
   font-size: 1rem;
 }
@@ -135,7 +137,7 @@ body {
   line-height: 1.35;
   letter-spacing: -0.02em;
   margin-bottom: 10px;
-  color: var(--text-color);
+  color: var(--color-text);
 }
 
 .article-date {
@@ -164,7 +166,7 @@ body {
   margin-bottom: 14px;
   padding-left: 12px;
   border-left: 4px solid var(--color-primary);
-  color: var(--text-color);
+  color: var(--color-text);
   line-height: 1.4;
 }
 
@@ -173,13 +175,13 @@ body {
   font-weight: 600;
   margin-top: 32px;
   margin-bottom: 10px;
-  color: var(--text-color);
+  color: var(--color-text);
 }
 
 /* 段落 */
 .article-body p {
   margin-bottom: 18px;
-  color: var(--text-color);
+  color: var(--color-text);
 }
 
 /* インラインコード */
@@ -204,7 +206,7 @@ body {
 
 .article-body pre code {
   background: none;
-  color: #000000;
+  color: var(--color-text);
   font-size: 0.9rem;
   padding: 0;
   line-height: 1.65;
@@ -276,5 +278,250 @@ body {
   .article-body pre {
     padding: 14px 16px;
     font-size: 0.85rem;
+  }
+}
+
+/* =============================================
+   記事一覧ページ専用スタイル（index.php）
+   ============================================= */
+
+/* ── ページ全体レイアウト ── */
+.index-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 40px auto 80px;
+  padding: 0 20px;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+/* ── ページ見出し ── */
+.index-heading {
+  text-align: center;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin: 36px 0 0;
+}
+
+/* ── キーワード検索バー ── */
+.index-search {
+  max-width: 480px;
+  margin: 24px auto 0;
+  display: flex;
+  gap: 8px;
+}
+
+.index-search input[type="text"] {
+  flex: 1;
+  padding: 9px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.index-search input[type="text"]:focus {
+  border-color: var(--color-primary);
+}
+
+.index-search button {
+  padding: 9px 18px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.index-search button:hover {
+  opacity: 0.85;
+}
+
+/* ── 左サイドバー（タグ一覧） ── */
+.index-sidebar {
+  width: 160px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 72px; /* ヘッダーの高さ分 */
+}
+
+.sidebar-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar-tag-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-tag-list li a {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.sidebar-tag-list li a:hover,
+.sidebar-tag-list li a.active {
+  background: var(--color-primary-lt);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.sidebar-tag-list li a.active {
+  font-weight: 700;
+}
+
+/* ── 右メインエリア ── */
+.index-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── 記事グリッド ── */
+.article-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* ── 記事カード ── */
+.article-card {
+  background: var(--color-surface);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.article-card:hover {
+  box-shadow: 0 6px 20px rgba(108, 79, 194, 0.12);
+  transform: translateY(-2px);
+}
+
+.card-thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-primary-lt);
+  display: block;
+}
+
+.card-thumb-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--color-primary-lt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  font-size: 2rem;
+  opacity: 0.4;
+}
+
+.card-body {
+  padding: 14px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* .tag は article.css の共通クラスをそのまま使用 */
+
+.card-date {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+  margin-top: auto;
+}
+
+/* ── 検索結果なし ── */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+/* ── レスポンシブ ── */
+@media (max-width: 900px) {
+  .article-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .index-layout {
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .index-sidebar {
+    width: 100%;
+    position: static;
+  }
+
+  .sidebar-tag-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .sidebar-tag-list li a {
+    padding: 4px 10px;
+    background: var(--color-primary-lt);
+    color: var(--color-primary);
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+
+  .article-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .article-grid {
+    grid-template-columns: 1fr;
   }
 }
