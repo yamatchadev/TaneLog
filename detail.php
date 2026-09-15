@@ -98,6 +98,30 @@ $current_user = $user_stmt->fetch();
 $current_icon_src = ($current_user['icon_path'] && file_exists(__DIR__ . '/' . $current_user['icon_path']))
     ? htmlspecialchars($current_user['icon_path'])
     : 'https://ui-avatars.com/api/?name=' . urlencode($current_user['nickname'] ?? 'User') . '&background=4F5D95&color=fff';
+
+// 投稿内のURLリンク化
+function linkifyContent($rawText) {
+    // 1. HTMLエスケープ
+    $escaped = htmlspecialchars($rawText, ENT_QUOTES, 'UTF-8');
+
+    // 2. URLを検出してリンク化
+    $pattern = '/(https?:\/\/[^\s<]+)/i';
+    $escaped = preg_replace_callback($pattern, function ($matches) {
+        $url = $matches[1];
+
+        // 末尾の句読点・記号をリンクの外に出す
+        $trailing = '';
+        if (preg_match('/[).,!?、。」』]+$/u', $url, $tMatch)) {
+            $trailing = $tMatch[0];
+            $url = substr($url, 0, -mb_strlen($trailing));
+        }
+
+        return '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" class="front-link">' . $url . '</a>' . $trailing;
+    }, $escaped);
+
+    return $escaped;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -128,9 +152,10 @@ $current_icon_src = ($current_user['icon_path'] && file_exists(__DIR__ . '/' . $
             }
             /* 詳細表示用のカードスタイル */
             .post-card {
+                position: relative;
                 background: var(--card-bg);
                 border-radius: 12px;
-                padding: 20px;
+                padding: 15px 20px;
                 box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
                 margin-bottom: 12px;
                 border: 1px solid var(--border-color);
@@ -188,7 +213,9 @@ $current_icon_src = ($current_user['icon_path'] && file_exists(__DIR__ . '/' . $
                 font-size: 16px;
                 line-height: 1.6;
                 white-space: pre-wrap;
-                margin: 0;
+                margin: 0 0 12px 0;
+                overflow-wrap: anywhere;
+                word-break: break-word;
             }
                 /* 添付ファイルエリア */
         .attachment-list {
@@ -681,12 +708,12 @@ $current_icon_src = ($current_user['icon_path'] && file_exists(__DIR__ . '/' . $
 <?php require_once 'header.php';?>
         <main class="container">
             <div class="back-nav">
-                <a href="timeline.php" class="back-link">← タイムラインに戻る</a>
+                <a href="<?php echo $_SERVER['HTTP_REFERER'] ?? 'timeline.php';?>" class="back-link">← 戻る</a>
             </div>
             <?php if(isset($post_error)):?>
             <div class="error-msg"><?php echo $post_error;?></div>
             <?php endif;?>
-            <div class="post-card" style="display:<?php if(isset($post_error)){echo "none";}?>">
+            <div class="post-card" style="display:<?php if(isset($post_error)){echo "none;";}?>">
                 <div class="post-header">
 
                     <a href="profile.php?username=<?= htmlspecialchars($post['username']) ?>" class="front-link">
@@ -702,7 +729,7 @@ $current_icon_src = ($current_user['icon_path'] && file_exists(__DIR__ . '/' . $
                     </div>
                 </div>
                 
-                <p class="post-content"><?= htmlspecialchars($post['content']) ?></p>
+                <p class="post-content"><?= linkifyContent($post['content']) ?></p>
                 <!-- 添付ファイル -->
                 <?php if (!empty($attachments)): ?>
                     <div class="attachment-list">

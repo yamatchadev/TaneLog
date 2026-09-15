@@ -59,6 +59,29 @@ if (!empty($post_ids)) {
 }
 
 $latest_id = !empty($posts) ? $posts[0]['id'] : 0;
+
+// 投稿内のＵＲＬをリンク化
+function linkifyContent($rawText) {
+    // 1. HTMLエスケープ
+    $escaped = htmlspecialchars($rawText, ENT_QUOTES, 'UTF-8');
+
+    // 2. URLを検出してリンク化
+    $pattern = '/(https?:\/\/[^\s<]+)/i';
+    $escaped = preg_replace_callback($pattern, function ($matches) {
+        $url = $matches[1];
+
+        // 末尾の句読点・記号をリンクの外に出す
+        $trailing = '';
+        if (preg_match('/[).,!?、。」』]+$/u', $url, $tMatch)) {
+            $trailing = $tMatch[0];
+            $url = substr($url, 0, -mb_strlen($trailing));
+        }
+
+        return '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" class="front-link">' . $url . '</a>' . $trailing;
+    }, $escaped);
+
+    return $escaped;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -71,7 +94,7 @@ $latest_id = !empty($posts) ? $posts[0]['id'] : 0;
         <link rel="icon" href="/favicon.ico" sizes="any">        
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#fef8e5">
-        <link rel="apple-touch-icon" href="/icons/icon-192.png">
+        <link rel="apple-touch-icon" href="/icon/icon-192.png">
 
         <script>
             if ('serviceWorker' in navigator) {
@@ -243,6 +266,8 @@ $latest_id = !empty($posts) ? $posts[0]['id'] : 0;
                 line-height: 1.6;
                 white-space: pre-wrap;
                 margin: 0 0 12px 0; /* 下部に余白を確保 */
+                overflow-wrap: anywhere;
+                word-break: break-word;
             }
             .post-actions {
                 margin-bottom: 8px;
@@ -613,7 +638,7 @@ console.log('取得したpost_id:', post_id); // ← 追加
                                 </div>
                             </div>
                         </div>
-                        <p class="post-content"><?= htmlspecialchars($p['content']) ?></p>
+                        <p class="post-content"><?= linkifyContent($p['content']) ?></p>
 
                         <!-- 添付ファイル -->
                         <?php if (!empty($attachments_map[$p['id']])): ?>
@@ -678,6 +703,28 @@ textarea.addEventListener('input', () => {
 });
 
 
+
+function linkifyText(rawText) {
+    // 1. HTMLエスケープ
+    const div = document.createElement('div');
+    div.textContent = rawText;
+    let escaped = div.innerHTML;
+
+    // 2. URLを検出してリンク化
+    const urlPattern = /(https?:\/\/[^\s<]+)/gi;
+    escaped = escaped.replace(urlPattern, (url) => {
+        // 末尾の句読点・記号をリンクの外に出す
+        const trailingMatch = url.match(/[).,!?、。」』]+$/);
+        let trailing = '';
+        if (trailingMatch) {
+            trailing = trailingMatch[0];
+            url = url.slice(0, -trailing.length);
+        }
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="front-link">${url}</a>${trailing}`;
+    });
+
+    return escaped;
+}
 // ── リアルタイム更新 ──────────────────────────
 let latestId = <?= (int)$latest_id ?>;
 const postList = document.getElementById('postList');
@@ -703,7 +750,7 @@ function buildPostCard(p) {
                 </div>
             </div>
         </div>
-        <p class="post-content">${p.content}</p>
+        <p class="post-content">${linkifyText(p.content)}</p>
         <div class="post-actions front-link">
             <a href="detail.php?contentid=${p.content_id}&reply=1" class="action-btn reply-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -32,7 +32,7 @@ if (isset($_GET['username'])) {
     }
 
     //投稿表示
-    $stmt = $pdo->prepare("SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC");
+    $stmt = $pdo->prepare("SELECT * FROM posts WHERE user_id = ? AND deleted = 0 ORDER BY created_at DESC");
     $stmt->execute([$user['id']]);
     $userPosts = $stmt->fetchAll();
 
@@ -40,6 +40,27 @@ if (isset($_GET['username'])) {
     $iconSrc = ($currentIcon && file_exists(__DIR__ . '/' . $currentIcon))
     ? htmlspecialchars($currentIcon)
     : 'https://ui-avatars.com/api/?name=' . urlencode($user['nickname'] ?? 'U') . '&background=4F5D95&color=fff';
+}
+function linkifyContent($rawText) {
+    // 1. HTMLエスケープ
+    $escaped = htmlspecialchars($rawText, ENT_QUOTES, 'UTF-8');
+
+    // 2. URLを検出してリンク化
+    $pattern = '/(https?:\/\/[^\s<]+)/i';
+    $escaped = preg_replace_callback($pattern, function ($matches) {
+        $url = $matches[1];
+
+        // 末尾の句読点・記号をリンクの外に出す
+        $trailing = '';
+        if (preg_match('/[).,!?、。」』]+$/u', $url, $tMatch)) {
+            $trailing = $tMatch[0];
+            $url = substr($url, 0, -mb_strlen($trailing));
+        }
+
+        return '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" class="front-link">' . $url . '</a>' . $trailing;
+    }, $escaped);
+
+    return $escaped;
 }
 ?>
 <!DOCTYPE html>
@@ -55,7 +76,7 @@ if (isset($_GET['username'])) {
         <link rel="icon" href="/favicon.ico" sizes="any">        
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#fef8e5">
-        <link rel="apple-touch-icon" href="/icons/icon-192.png">
+        <link rel="apple-touch-icon" href="/icon/icon-192.png">
 
         <script>
             if ('serviceWorker' in navigator) {
@@ -247,6 +268,18 @@ if (isset($_GET['username'])) {
                 margin-bottom: 12px;
                 border: 1px solid var(--border-color);
             }
+            .post-card-link {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1; /* カード内の通常テキスト（詳細リンク）のレイヤー */
+            }
+            .front-link {
+                position: relative;
+                z-index: 2; /* 詳細リンク(z-index:1)より手前に出すことで個別にクリック可能に */
+            }
             .post-header {
                 display: flex;
                 align-items: center;
@@ -287,6 +320,75 @@ if (isset($_GET['username'])) {
                 line-height: 1.6;
                 white-space: pre-wrap;
                 margin: 0 0 12px 0;
+                overflow-wrap: anywhere;
+                word-break: break-word;
+            }
+            .post-actions {
+                margin-bottom: 8px;
+            }
+            /*添付ファイルエリア*/
+            .attachment-list {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+            .attachment-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 10px;
+                border: 1px solid var(--border-color);
+                border-radius: 6px;
+                font-size: 13px;
+                color: var(--primary-color);
+                text-decoration: none;
+                background: var(--bg-color);
+                word-break: break-all;
+            }
+            .attachment-item:hover {
+                background: var(--border-color);
+            }
+            .attachment-size {
+                color: #a0aec0;
+                font-size: 12px;
+            }
+            .post-actions {
+                display: flex;
+                align-items: center;
+                gap: 24px;
+                margin-bottom: 10px;
+            }
+            .action-btn {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: #a0aec0;
+                font-size: 14px;
+                padding: 4px;
+                border-radius: 20px;
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .action-btn:hover {
+                color: var(--primary-color);
+            }
+            .action-count {
+                font-size: 13px;
+            }
+            .like-btn.liked {
+                color: #e53e3e;
+            }
+            .like-btn.liked svg {
+                fill: #e53e3e;
+                stroke: #e53e3e;
+            }
+            .like-btn:hover {
+                color: #e53e3e;
             }
             .post-time {
                 font-size: 12px;
@@ -359,6 +461,7 @@ if (isset($_GET['username'])) {
                 <?php if (!empty($userPosts)): ?>
                     <?php foreach ($userPosts as $p): ?>
                         <div class="post-card">
+                            <a href="detail.php?contentid=<?= htmlspecialchars($p['content_id']) ?>" class="post-card-link" aria-label="投稿の詳細を見る"></a>
                             <div class="post-header">
                                 <img src="<?= $iconSrc ?>" alt="アイコン" class="post-icon">
                                 <div class="post-meta">
@@ -370,7 +473,7 @@ if (isset($_GET['username'])) {
                             </div>
                             
                             <!-- 投稿内容 (カラム名は適宜変更してください) -->
-                            <p class="post-content"><?= htmlspecialchars($p['content'] ?? '（投稿内容）') ?></p>
+                            <p class="post-content"><?= linkifyContent($p['content'] ?? '（投稿内容）') ?></p>
                             
                             <div class="post-time"><?= htmlspecialchars(mb_substr($p['created_at'], 0, 16)) ?></div>
                         </div>

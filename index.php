@@ -137,8 +137,16 @@ if($files !== false && count($files) > 0) {
         <meta name="description" content="TaneLogはPHPを学ぶ人のための投稿・交流アプリです。学習ログをタイムラインに投稿したり、記事を書いて知識をストックしたり、いいね・リプライで他の学習者とつながれます。">
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#fef8e5">
-        <link rel="apple-touch-icon" href="/icons/icon-192.png">
-
+        <link rel="apple-touch-icon" href="/icon/icon-192.png">
+        <script type="application/ld+json">
+        {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "タネログ",
+        "alternateName": ["たねろぐ", "TaneLog", "Tanelog"],
+        "url": "https://tanelog.yamatcha.net"
+        }
+        </script>
         <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

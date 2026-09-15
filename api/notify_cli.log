@@ -355,3 +355,52 @@
 [2026-09-12 05:28:00] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
 [2026-09-12 05:28:00] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
 [2026-09-12 05:28:00] 通知送信処理が正常に完了しました
+[2026-09-15 06:45:09] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：https:\/\/mail.google.com\/mail\/u…","url":"\/detail.php?contentid=513503394318115"}
+[2026-09-15 06:45:09] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?)
+[2026-09-15 06:45:09] 取得した購読数: 3
+[2026-09-15 06:45:11] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-15 06:45:11] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-15 06:45:11] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-15 06:45:11] 通知送信処理が正常に完了しました
+[2026-09-15 06:50:37] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：https:\/\/www.google.com\/search?…","url":"\/detail.php?contentid=256336457188197"}
+[2026-09-15 06:50:37] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?)
+[2026-09-15 06:50:37] 取得した購読数: 3
+[2026-09-15 06:50:38] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-15 06:50:39] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-15 06:50:39] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-15 06:50:39] 通知送信処理が正常に完了しました
+[2026-09-15 06:51:00] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：試したこと\r\nURL + **<**にはマッチしないように …","url":"\/detail.php?contentid=636119826605416"}
+[2026-09-15 06:51:00] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?)
+[2026-09-15 06:51:00] 取得した購読数: 3
+[2026-09-15 06:51:02] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-15 06:51:02] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-15 06:51:02] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-15 06:51:02] 通知送信処理が正常に完了しました
+[2026-09-15 06:53:06] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：試したこと\r\nURL + **<**にはマッチしないように …","url":"\/detail.php?contentid=753295875228135"}
+[2026-09-15 06:53:06] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?)
+[2026-09-15 06:53:06] 取得した購読数: 3
+[2026-09-15 06:53:07] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-15 06:53:07] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-15 06:53:08] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-15 06:53:08] 通知送信処理が正常に完了しました
+[2026-09-15 06:54:40] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：今のままだと削除済みでもhtmlでみれる","url":"\/detail.php?contentid=748058066213192"}
+[2026-09-15 06:54:40] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?)
+[2026-09-15 06:54:40] 取得した購読数: 3
+[2026-09-15 06:54:42] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-15 06:54:42] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-15 06:54:43] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-15 06:54:43] 通知送信処理が正常に完了しました
+[2026-09-15 07:03:17] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：ああああああああああああああああああああああああああああああ…","url":"\/detail.php?contentid=995209053751219"}
+[2026-09-15 07:03:17] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?)
+[2026-09-15 07:03:17] 取得した購読数: 3
+[2026-09-15 07:03:19] 送信成功: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-15 07:03:19] 送信成功: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-15 07:03:20] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-15 07:03:20] 通知送信処理が正常に完了しました
+[2026-09-15 08:33:33] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：http:\/\/localhost\/detail.php?co…","url":"\/detail.php?contentid=662252282482102"}
+[2026-09-15 08:33:33] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?)
+[2026-09-15 08:33:33] 取得した購読数: 3
+[2026-09-15 08:33:33] 送信失敗: https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc 理由: cURL error 6: Could not resolve host: web.push.apple.com (see https://curl.se/libcurl/c/libcurl-errors.html) for https://web.push.apple.com/QMil7sunXz3EwTYgtmYEel9wi1XvrmuSiXs6PNAYMvkVJ_o-HzAvTby4n98a4oa9XL3mtlR8dALAaAoEMPXkS-zh-FE8wB-V074yoh6U3w2dxLGVKtU8QUuRAreBCWWpUbbT7tiFMnugaMd4mgWmbXCKCfrKsV9JDLBZz7FucYc
+[2026-09-15 08:33:33] 送信失敗: https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII 理由: cURL error 6: Could not resolve host: web.push.apple.com (see https://curl.se/libcurl/c/libcurl-errors.html) for https://web.push.apple.com/QHIev7dp_64jPzAH_u9DY2aLqfUXU0FDTmIajd3GF-j3p3K0Cka3YbQ3k11rzfobtryj0Rrr8jee82eijTqGRGFYsdISUFxwFyx7BswI0c0nG_kBNmU13TyHNrXSGDS4XSMn_0BH6himGKej63ujb_iV9LqOJqkI66WCKpN6PII
+[2026-09-15 08:33:33] 送信失敗: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc 理由: cURL error 6: Could not resolve host: web.push.apple.com (see https://curl.se/libcurl/c/libcurl-errors.html) for https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-09-15 08:33:33] 通知送信処理が正常に完了しました

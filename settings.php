@@ -11,7 +11,7 @@ require_once 'api/logincheck.php';
         <title>設定 - TaneLog</title>
         <link rel="icon" href="/favicon.ico" sizes="any">  
         <meta name="theme-color" content="#fef8e5">
-        <link rel="apple-touch-icon" href="/icons/icon-192.png">
+        <link rel="apple-touch-icon" href="/icon/icon-192.png">
         <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
