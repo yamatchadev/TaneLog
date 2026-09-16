@@ -200,28 +200,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-<header>
-    <div id="header-top">
-        <h1><?= $recentnewsdate; ?> <?= $recentnews; ?><a href="./news.php">詳細</a></h1>
-    </div>
-    <a href="timeline.php"><img src="img/tanelog.png" alt="TaneLog" id="headerLogo"></a>
-
-    <div class="header-actions">
-        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="テーマ切り替え">🌙</button>
-        <button class="menu-btn" id="menuBtn">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-        </div>
-    </div>
-</header>
-<?php require 'sidemenu.php'; ?>
+<?php require_once 'header.php';?>
 
 <main class="container">
     <div class="card">
         <a href="news_post.php"><h2>ニュース投稿</h2></a>
-        <a href="articles/admin.php"><h2>新規記事作成</h2></a>
+        <a href="article/admin.php"><h2>新規記事作成</h2></a>
         <a href="meijiro/admin.php"><h2>ユーザー削除</h2></a>
 
     </div> 

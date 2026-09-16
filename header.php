@@ -5,7 +5,7 @@ $stmt->execute();
 $news = $stmt->fetch();
 $recentnewsdate = mb_substr($news['created_at'], 0, 10);
 $recentnews = $news['title'];
-$recentnewsurl = "articles/contents/".$news['id'].".php";
+$recentnewsurl = "article/content/".$news['id'].".php";
 
 ?>
 
@@ -36,12 +36,12 @@ $recentnewsurl = "articles/contents/".$news['id'].".php";
     </div>
     <ul>
         <li>
-            <a href="https://TaneLog.yamatcha.net/articles/">
+            <a href="https://TaneLog.yamatcha.net/article/">
                 <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                 </svg>
-                <span>お知らせ（準備中）</span>
+                <span>開発者記事</span>
             </a>
         </li>
         <li>

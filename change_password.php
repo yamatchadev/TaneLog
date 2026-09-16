@@ -258,27 +258,7 @@ if(isset($_SESSION['user_id'])){
         </style>
     </head>
     <body>
-
-        <header>
-            <div id="header-top">
-                <h1><?= $recentnewsdate; ?> <?= $recentnews; ?><a href="./news.php">詳細</a></h1>
-            </div>
-            <div class="header-main-row">
-                <div>
-                    <a href="timeline.php"><img src="img/tanelog.png" alt="TaneLog" id="headerLogo"></a>
-                </div>
-                <div class="header-actions">
-                    <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="テーマ切り替え">🌙</button>
-                    <button class="menu-btn" id="menuBtn">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <?php require 'sidemenu.php'; ?>
+    <?php require 'header.php'; ?>
 
         <main class="container">
             <div class="card">

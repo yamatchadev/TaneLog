@@ -24,7 +24,7 @@ $sql .= " ORDER BY created_at DESC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
-$articles = $stmt->fetchAll();
+$article = $stmt->fetchAll();
 
 // ── サイドバー用タグ一覧（全記事から重複排除）──
 $all_tags_stmt = $pdo->query("SELECT tags FROM articles WHERE tags IS NOT NULL AND tags != ''");
@@ -101,25 +101,8 @@ $tag_list = array_values(array_unique($tag_list));
 </head>
 <body>
 
-  <!-- ════ timeline.php と同一のヘッダー ════ -->
-  <header>
-    <div id="header-top">
-      <h1><?= $recentnewsdate ?> <?= $recentnews ?><a href="/../<?= $recentnewsurl ?>">詳細</a></h1>
-    </div>
-    <div class="header-main-row">
-      <div>
-        <a href="../timeline.php"><img src="../img/tanelog.png" alt="TaneLog" id="headerLogo"></a>
-      </div>
-      <div class="header-actions">
-        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="テーマ切り替え">🌙</button>
-        <button class="menu-btn" id="menuBtn">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </header>
 
-  <?php require '../sidemenu.php'; ?>
+  <?php require '../header.php'; ?>
   <!-- ════════════════════════════════════════ -->
 
   <!-- ページ見出し -->
@@ -166,14 +149,14 @@ $tag_list = array_values(array_unique($tag_list));
     <!-- ── 右：記事グリッド ── -->
     <main class="index-main">
       <div class="article-grid">
-        <?php if (empty($articles)): ?>
+        <?php if (empty($article)): ?>
           <p class="no-results">記事が見つかりませんでした。</p>
         <?php else: ?>
-          <?php foreach ($articles as $a): ?>
+          <?php foreach ($article as $a): ?>
             <?php
-              $thumb_path = __DIR__ . '/thumbnails/' . $a['id'] . '.png';
+              $thumb_path = __DIR__ . '/thumbnail/' . $a['id'] . '.png';
               $thumb_src  = file_exists($thumb_path)
-                ? 'thumbnails/' . $a['id'] . '.png'
+                ? 'thumbnail/' . $a['id'] . '.png'
                 : null;
               $tags = array_filter(array_map('trim', explode(',', $a['tags'] ?? '')));
               $date = date('Y年m月d日', strtotime($a['created_at']));

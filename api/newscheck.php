@@ -5,7 +5,7 @@ $stmt->execute();
 $news = $stmt->fetch();
 $recentnewsdate = mb_substr($news['created_at'], 0, 10);
 $recentnews = $news['title'];
-$recentnewsurl = "articles/contents/".$news['id'].".php";
+$recentnewsurl = "article/contents/".$news['id'].".php";
 
 ?>
 
