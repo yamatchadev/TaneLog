@@ -179,7 +179,7 @@ require_once '../../api/newscheck.php';
 
     <!-- ───── サムネイル ───── -->
     <div class="article-thumbnail">
-      <img src="../thumbnail/18.jpg" alt="RememberMe機能記事サムネイル">
+      <img src="../thumbnail/18.png" alt="RememberMe機能記事サムネイル">
     </div>
 
     <!-- ───── メタ情報 ───── -->

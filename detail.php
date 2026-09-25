@@ -69,7 +69,7 @@ if (isset($_GET['contentid'])) {
                 JOIN users ON posts.user_id = users.id
                 LEFT JOIN likes ON likes.post_id = posts.id
                 LEFT JOIN posts AS replies ON replies.parent_id = posts.id
-                WHERE posts.parent_id = ?
+                WHERE posts.parent_id = ? AND posts.deleted = 0
                 GROUP BY posts.id
                 ORDER BY posts.created_at ASC"
             );

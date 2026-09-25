@@ -209,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="meijiro/admin.php"><h2>ユーザー削除</h2></a>
 
     </div> 
-<a href="timeline.php" class="back-link">← タイムラインに戻る</a>
+<a href="<?= $_SERVER['HTTP_REFERER'] ?? 'timeline.php';?>" class="back-link">← 戻る</a>
 </main>
 
 <script>
