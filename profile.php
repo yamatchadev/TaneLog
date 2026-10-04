@@ -476,6 +476,9 @@ function linkifyContent($rawText) {
                         <?= $isFollowing ? 'フォロー解除' : 'フォローする' ?>
                     </button>
 
+                    <?php else: ?>
+                        <a href="update.php"><button class="follow-btn">プロフィールを編集</button></a>
+                        
                     <?php endif; ?>
 
                     <div class="profile-statement"><?php if (isset($user['profile_statement'])){echo nl2br(htmlspecialchars($user['profile_statement']));}else{echo "設定されていません。";}?></div>

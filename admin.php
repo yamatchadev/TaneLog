@@ -204,7 +204,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <main class="container">
     <div class="card">
-        <a href="news_post.php"><h2>ニュース投稿</h2></a>
         <a href="article/admin.php"><h2>新規記事作成</h2></a>
         <a href="meijiro/admin.php"><h2>ユーザー削除</h2></a>
 
