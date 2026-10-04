@@ -178,7 +178,7 @@ require_once '../../api/newscheck.php';
 
     <!-- ───── サムネイル ───── -->
     <div class="article-thumbnail">
-      <img src="../thumbnail/17.jpg" alt="CVE-2024-4577記事サムネイル">
+      <img src="../thumbnail/17.png" alt="CVE-2024-4577記事サムネイル">
     </div>
 
     <!-- ───── メタ情報 ───── -->

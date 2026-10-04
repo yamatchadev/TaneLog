@@ -480,7 +480,6 @@ function linkifyContent($rawText) {
                         <a href="update.php"><button class="follow-btn">プロフィールを編集</button></a>
                         
                     <?php endif; ?>
-
                     <div class="profile-statement"><?php if (isset($user['profile_statement'])){echo nl2br(htmlspecialchars($user['profile_statement']));}else{echo "設定されていません。";}?></div>
                     
                     <div class="join-date">参加した日: <?= htmlspecialchars($time) ?></div>
@@ -591,5 +590,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-    </body>
+</body>
 </html>
