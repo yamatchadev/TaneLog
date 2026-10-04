@@ -467,3 +467,9 @@
 [2026-10-02 10:04:46] 取得した購読数: 1
 [2026-10-02 10:04:47] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
 [2026-10-02 10:04:47] 通知送信処理が正常に完了しました
+[2026-10-04 14:56:41] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16],"title":"TaneLog","body":"TaneLogさんが新しい投稿をしました：aaaaaaa!!!!!\r\ni-Cloud SHine!!!…","url":"\/detail.php?contentid=775687706795954"}
+[2026-10-04 14:56:42] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?)
+[2026-10-04 14:56:42] 取得した購読数: 0
+[2026-10-04 14:56:42] 取得した購読数: 0
+[2026-10-04 14:56:42] 通知送信処理が正常に完了しました
+[2026-10-04 14:56:42] 通知送信処理が正常に完了しました
