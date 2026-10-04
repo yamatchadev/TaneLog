@@ -325,10 +325,10 @@ if ($username === false) {
                     <img id="icon-preview" src="<?= $iconSrc ?>" alt="アイコンプレビュー">
                     <div>
                         <label class="icon-file-label" for="icon">画像を選択</label>
-                        <div id="icon-filename">未選択</div>
+                        <div id="icon-filename">使用可能ファイル：JPG,PNG,GIF,WebP</div>
                     </div>
                 </div>
-                <input type="file" id="icon" name="icon" accept="image/*">
+                <input type="file" id="icon" name="icon" accept=".jpg, .jpeg, .png, .webp, .gif">
 
                 <div style="margin-top: 20px;"></div>
 
@@ -363,7 +363,7 @@ if ($username === false) {
         </div>
 
         <div class="form-footer">
-            <a href="timeline.php" class="back-link">← タイムラインに戻る</a>
+            <a href="<?= $_SERVER['HTTP_REFERER'] ?? 'timeline.php'; ?>" class="back-link">← 戻る</a>
             <button type="submit" class="submit-btn">変更を適用</button>
         </div>
     </form>
