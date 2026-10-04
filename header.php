@@ -16,7 +16,7 @@ $recentnewsurl = "article/content/".$news['id'].".php";
 
             <div class="header-main-row">
                 <div>
-                    <a href="timeline.php"><img src="img/tanelog.png" alt="TaneLog" id="headerLogo"></a>
+                    <a href="https://tanelog.yamatcha.net/timeline.php"><img src="img/tanelog.png" alt="TaneLog" id="headerLogo"></a>
                 </div>
                 <div class="header-actions">
                     <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="テーマ切り替え">🌙</button>
