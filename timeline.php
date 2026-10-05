@@ -272,29 +272,99 @@ function linkifyContent($rawText) {
             .post-actions {
                 margin-bottom: 8px;
             }
-            /*添付ファイルエリア*/
-            .attachment-list {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 6px;
-                margin-bottom: 12px;
-            }
+/* ── 添付ファイルエリア（変更・追加分） ── */
+        .attachment-list {
+            margin-bottom: 5px;
+        }
+            /* 既存の.attachment-itemを置き換え */
             .attachment-item {
+                position: relative; /* メニューの基準位置にする */
                 display: inline-flex;
                 align-items: center;
                 gap: 6px;
-                padding: 6px 10px;
+                padding: 6px 8px 6px 10px;
                 border: 1px solid var(--border-color);
                 border-radius: 6px;
                 font-size: 13px;
+                background: var(--bg-color);
+                margin-bottom: 5px;
+            }
+
+            .attachment-link {
                 color: var(--primary-color);
                 text-decoration: none;
-                background: var(--bg-color);
                 word-break: break-all;
             }
-            .attachment-item:hover {
+            .attachment-link:hover {
+                text-decoration: underline;
+            }
+
+            .attachment-size {
+                color: #a0aec0;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            /* ⋮ メニューボタン */
+            .attachment-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 22px;
+                height: 22px;
+                padding: 0;
+                margin-left: 2px;
+                background: none;
+                border: none;
+                border-radius: 50%;
+                color: #a0aec0;
+                cursor: pointer;
+                transition: background 0.15s, color 0.15s;
+                flex-shrink: 0;
+            }
+            .attachment-menu-btn:hover,
+            .attachment-menu-btn[aria-expanded="true"] {
                 background: var(--border-color);
+                color: var(--primary-color);
+            }
+
+            /* ドロップダウンメニュー本体 */
+            .attachment-menu {
+                position: absolute;
+                top: calc(100% + 4px);
+                right: 0;
+                min-width: 120px;
+                background: var(--card-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+                overflow: hidden;
+                z-index: 10; /* .front-link(z-index:2)よりさらに手前 */
+            }
+
+            .attachment-menu-item {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 8px 14px;
+                background: none;
+                border: none;
+                text-align: left;
+                font-size: 13px;
+                color: var(--text-color);
+                text-decoration: none;
+                cursor: pointer;
+                white-space: nowrap;
+            }
+            /* メニューが開いている添付ファイルだけ最前面に出す */
+            .attachment-item.menu-open {
+                z-index: 5; /* 他の .attachment-item (z-index:2) より手前に */
+            }
+            .attachment-menu-item:hover {
+                background: var(--bg-color);
+            }
+            .attachment-menu-item.attachment-report-btn {
+                color: #e53e3e; /* 通報は注意喚起色に */
             }
             .attachment-size {
                 color: #a0aec0;
@@ -655,15 +725,29 @@ console.log('取得したpost_id:', post_id); // ← 追加
                                     <audio controls class="attachment-audio front-link">
                                         <source src="api/serve_file.php?id=<?= $att['id'] ?>" type="<?= htmlspecialchars($att['mime_type']) ?>">
                                     </audio>
+<?php else: ?>
+    <div class="attachment-item front-link" data-att-id="<?= $att['id'] ?>">
+        <a href="download_page.php?id=<?= $att['id'] ?>"
+           class="attachment-link"
+           target="_blank">
+            📁 <?= htmlspecialchars($att['original_name']) ?>
+        </a>
+        <span class="attachment-size">(<?= number_format($att['file_size'] / 1024 / 1024, 1) ?>MB)</span>
 
-                                <?php else: ?>
-                                    <a href="download_page.php?id=<?= $att['id'] ?>"
-                                    class="attachment-item front-link"
-                                    target="_blank">
-                                        📁 <?= htmlspecialchars($att['original_name']) ?>
-                                        <span class="attachment-size">(<?= number_format($att['file_size'] / 1024 / 1024, 1) ?>MB)</span>
-                                    </a>
-                                <?php endif; ?>
+        <button type="button" class="attachment-menu-btn" aria-label="その他の操作" aria-haspopup="true" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="5" r="2"/>
+                <circle cx="12" cy="12" r="2"/>
+                <circle cx="12" cy="19" r="2"/>
+            </svg>
+        </button>
+
+        <div class="attachment-menu" hidden>
+            <a href="download_page.php?id=<?= $att['id'] ?>" class="attachment-menu-item" target="_blank">ダウンロード</a>
+            <button type="button" class="attachment-menu-item attachment-report-btn" data-att-id="<?= $att['id'] ?>">通報</button>
+        </div>
+    </div>
+<?php endif; ?>
                             <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
@@ -862,6 +946,60 @@ lightboxClose.addEventListener('click', closeLightbox);
 lightboxBackdrop.addEventListener('click', closeLightbox);
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeLightbox();
+});
+
+// ── 添付ファイルの「⋮」メニュー（修正版） ──────────────────────
+document.addEventListener('click', (e) => {
+    const menuBtn = e.target.closest('.attachment-menu-btn');
+
+    // クリックされたボタン以外の開いているメニューは閉じる
+    document.querySelectorAll('.attachment-menu:not([hidden])').forEach(menu => {
+        const ownerBtn = menu.previousElementSibling;
+        if (ownerBtn !== menuBtn) {
+            menu.hidden = true;
+            ownerBtn?.setAttribute('aria-expanded', 'false');
+            ownerBtn?.closest('.attachment-item')?.classList.remove('menu-open');
+        }
+    });
+
+    if (menuBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const item = menuBtn.closest('.attachment-item');
+        const menu = menuBtn.nextElementSibling;
+        const willOpen = menu.hidden;
+
+        menu.hidden = !willOpen;
+        menuBtn.setAttribute('aria-expanded', String(willOpen));
+        item.classList.toggle('menu-open', willOpen);
+        return;
+    }
+
+    // 通報ボタン
+    const reportBtn = e.target.closest('.attachment-report-btn');
+    if (reportBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        // TODO: 通報APIが用意できたら、ここでfetch()して送信してください
+        alert('通報を受け付けました（送信処理は未実装です）');
+
+        const item = reportBtn.closest('.attachment-item');
+        item.querySelector('.attachment-menu').hidden = true;
+        item.querySelector('.attachment-menu-btn')?.setAttribute('aria-expanded', 'false');
+        item.classList.remove('menu-open');
+        return;
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.attachment-menu:not([hidden])').forEach(menu => {
+            const btn = menu.previousElementSibling;
+            menu.hidden = true;
+            btn?.setAttribute('aria-expanded', 'false');
+            btn?.closest('.attachment-item')?.classList.remove('menu-open');
+        });
+    }
 });
         </script>
 

@@ -144,10 +144,5 @@ startDownload().catch(err => {
     label.textContent  = '';
 });
 </script>
-
-<script>
-const theme = localStorage.getItem('theme') || 'light';
-document.getElementById('theme-link').href = theme === 'dark' ? 'css/style-dark.css' : 'css/style-light.css';
-</script>
 </body>
 </html>
