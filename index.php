@@ -452,7 +452,7 @@ if($files !== false && count($files) > 0) {
                         </div>
                         <button type="submit">ログイン</button>
                     </form>
-                    <p class="link-p">または <a href="send_email.php">新規登録</a></p>
+                    <p class="link-p">または <a href="<?= "https://".$_SERVER['HTTP_HOST']; ?>/send_email.php">新規登録</a></p>
                 </div>
             </div>
         </section>

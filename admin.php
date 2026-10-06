@@ -14,17 +14,19 @@ $success = false;
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $header_title = trim($_POST['header_title'] ?? '');
     $title   = trim($_POST['title'] ?? '');
     $content = trim($_POST['content'] ?? '');
 
-    if ($title === '' || $content === '') {
+    if ($header_title === '' || $title === '' || $content === '') {
         $error = 'タイトルと内容を両方入力してください。';
     } else {
-        $title_clean   = htmlspecialchars($title);
+        $header_title_clean = htmlspecialchars($header_title);
+        $title_clean = htmlspecialchars($title);
         $content_clean = htmlspecialchars($content);
 
-        $stmt = $pdo->prepare("INSERT INTO news (title, content) VALUES (?, ?)");
-        $stmt->execute([$title_clean, $content_clean]);
+        $stmt = $pdo->prepare("INSERT INTO news (header_title, title, content) VALUES (?, ?, ?)");
+        $stmt->execute([$header_title_clean, $title_clean, $content_clean]);
         $success = true;
     }
 }
@@ -213,12 +215,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script>
     // 送信ボタンの有効・無効制御
+    const headertitleInput = document.getElementById('header_title');
     const titleInput = document.getElementById('title');
     const contentInput = document.getElementById('content');
     const submitBtn = document.getElementById('submitBtn');
 
     function checkInputs() {
-        const isEmpty = titleInput.value.trim() === '' || contentInput.value.trim() === '';
+        const isEmpty = headertitleInput.value.trim() === '' || titleInput.value.trim() === '' || contentInput.value.trim() === '';
         submitBtn.disabled = isEmpty;
         submitBtn.style.opacity = isEmpty ? '0.5' : '1';
     }
@@ -226,6 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     submitBtn.disabled = true;
     submitBtn.style.opacity = '0.5';
 
+    headertitleInput.addEventListener('input', checkInputs);
     titleInput.addEventListener('input', checkInputs);
     contentInput.addEventListener('input', checkInputs);
 </script>

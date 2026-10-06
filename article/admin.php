@@ -12,13 +12,14 @@ if ($_SESSION['user_id'] !== ADMIN_USER_ID) {
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $title = trim($_POST['title']);
+    $header_title = trim($_POST['header_title']);
     if(!$_POST['tags'] == ""){
-    $tags = htmlspecialchars($_POST['tags']);
-        $stmt = $pdo->prepare("INSERT INTO article (title, tags) VALUES (?, ?)");
-        $stmt->execute([$title, $tags]);
+        $tags = htmlspecialchars($_POST['tags']);
+        $stmt = $pdo->prepare("INSERT INTO articles (header_title, title, tags) VALUES (?, ?, ?)");
+        $stmt->execute([$header_title, $title, $tags]);
         $id = $pdo->lastInsertId();
 
-        $filename = __DIR__ . '/contents/' . $id . '.php';
+        $filename = __DIR__ . '/content/' . $id . '.php';
 
         $template = <<<HTML
 <!DOCTYPE html>
@@ -36,11 +37,11 @@ HTML;
         file_put_contents($filename, $template);
         $info = "記事「" . htmlspecialchars($title) . "」、タグ「". $tags ."」を登録し、ファイルを生成しました。(ID: {$id})";
     } else{
-        $stmt = $pdo->prepare("INSERT INTO article (title) VALUES (?)");
-        $stmt->execute([$title]);
+        $stmt = $pdo->prepare("INSERT INTO article (header_title, title) VALUES (?, ?)");
+        $stmt->execute([$header_title, $title]);
         $id = $pdo->lastInsertId();
 
-        $filename = __DIR__ . '/contents/' . $id . '.php';
+        $filename = __DIR__ . '/content/' . $id . '.php';
 
         $template = <<<HTML
 <!DOCTYPE html>
@@ -66,9 +67,9 @@ HTML;
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>記事登録＆作成（管理画面） - TaneLog</title>
-                
-        <link rel="stylesheet" id="theme-link" href="../css/style-light.css">
-        
+        <script src="<?= "https://".$_SERVER['HTTP_HOST']; ?>/js/theme.js"></script>
+        <script src="<?= "https://".$_SERVER['HTTP_HOST']; ?>/js/sidemenu.js"></script>
+        <link rel="stylesheet" href="<?= "https://".$_SERVER['HTTP_HOST']; ?>/css/style-light.css">
         <style>
             body {
                 margin: 0;
@@ -321,6 +322,10 @@ HTML;
 
                 <form action="" method="post">
                     <div class="form-group">
+                        <label for="title">ヘッダータイトル</label>
+                        <input type="text" id="headertitle" name="header_title" placeholder="ヘッダーに表示するタイトルを入力" required>
+                    </div>
+                    <div class="form-group">
                         <label for="title">記事タイトル</label>
                         <input type="text" id="title" name="title" placeholder="作成する記事のタイトルを入力" required>
                     </div>
@@ -336,45 +341,5 @@ HTML;
             </div>
             <a href="../admin.php" class="back-link">← 管理者ページに戻る</a>
         </main>
-
-        <script>
-        const menuBtn = document.getElementById('menuBtn');
-        const closeBtn = document.getElementById('closeBtn');
-        const sideMenu = document.getElementById('sideMenu');
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
-        const headerLogo = document.getElementById('headerLogo');
-        const themeLink = document.getElementById('theme-link');
-
-        // サイドメニュー開閉
-        menuBtn.addEventListener('click', () => { sideMenu.classList.add('active'); });
-        closeBtn.addEventListener('click', () => { sideMenu.classList.remove('active'); });
-
-        // ダークモード同期
-        function updateToggleBtnIcon(theme) {
-            themeToggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
-        }
-
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        updateToggleBtnIcon(currentTheme);
-
-        if (headerLogo) {
-            headerLogo.src = currentTheme === 'dark' ? '../img/logo_dark.png' : '../img/tanelog.png';
-        }
-        if (themeLink) {
-            themeLink.href = currentTheme === 'dark' ? '../css/style-dark.css' : '../css/style-light.css';
-        }
-
-        themeToggleBtn.addEventListener('click', () => {
-            const isDark = themeLink.href.includes('css/style-dark.css');
-            const newTheme = isDark ? 'light' : 'dark';
-            
-            themeLink.href = newTheme === 'dark' ? '../css/style-dark.css' : '../css/style-light.css';
-            updateToggleBtnIcon(newTheme);
-            if (headerLogo) {
-                headerLogo.src = newTheme === 'dark' ? '../img/logo_dark.png' : '../img/tanelog.png';
-            }
-            localStorage.setItem('theme', newTheme);
-        });
-        </script>
     </body>
 </html>
