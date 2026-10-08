@@ -10,7 +10,7 @@
 }
 @font-face {
   font-family: 'CLMv3'; /* 任意のフォント名 */
-  src: url('https://www.dropbox.com/scl/fi/p6lkum1gtc37jptv9a7jp/Corporate-Logo-Medium-ver3.woff2?rlkey=ntytm3k0qem8ic47ekmkjvqhx&st=22kmia5t&dl=1') format('woff2'); /* ファイルのパスと形式 */
+  src: url('https://tanelog.yamatcha.net/font/Corporate-Logo-Medium-ver3.woff2') format('woff2'); /* ファイルのパスと形式 */
   font-weight: normal;
   font-style: normal;
   font-display: swap; /* 読み込み中の代替フォント表示を指定 */
