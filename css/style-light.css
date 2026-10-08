@@ -10,7 +10,7 @@
 }
 @font-face {
   font-family: 'CLMv3'; /* 任意のフォント名 */
-  src: url('https://tanelog.yamatcha.net/font/Corporate-Logo-Medium-ver3.woff2') format('woff2'); /* ファイルのパスと形式 */
+  src: url('/../font/Corporate-Logo-Medium-ver3.woff2') format('woff2'); /* ファイルのパスと形式 */
   font-weight: normal;
   font-style: normal;
   font-display: swap; /* 読み込み中の代替フォント表示を指定 */
@@ -206,3 +206,4 @@ header img {
                 background-color: #9b2c2c;
                 color: #fff;
             }
+            

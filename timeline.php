@@ -91,12 +91,43 @@ function linkifyContent($rawText) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>タイムライン - TaneLog</title>
+        <link rel="stylesheet" href="css/postcard.css">
         <link rel="icon" href="/favicon.ico" sizes="any">        
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#fef8e5">
         <link rel="apple-touch-icon" href="/icon/icon-192.png">
-
+        <script src="js/tinymce/tinymce.min.js"></script>
         <script>
+            const submitBtn = document.querySelector('button[type="submit"]');
+
+            function updateSubmitState(editor) {
+                if (!submitBtn) return;
+                const isEmpty = editor.getContent({ format: 'text' }).trim() === '';
+                submitBtn.disabled = isEmpty;
+                submitBtn.style.opacity = isEmpty ? '0.5' : '1';
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+            }
+
+            tinymce.init({
+                selector: '#foo',
+                language: 'ja',
+                license_key: 'gpl',
+                height: 300,
+                menubar: false,
+                statusbar: false,
+                plugins: 'lists',
+                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | forecolor',
+                setup: (editor) => {
+                    editor.on('init input keyup change SetContent Undo Redo', () => {
+                    updateSubmitState(editor);
+                    });
+                }
+            });
+
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js');
@@ -153,267 +184,6 @@ function linkifyContent($rawText) {
                 align-items: center;
                 gap: 8px;
             }
-            .attach-label {
-                font-size: 18px;
-                cursor: pointer;
-                line-height: 1;
-                user-select: none;
-            }
-            .attach-label:hover {
-                opacity: 0.7;
-            }
-            #attach-count {
-                font-size: 12px;
-                color: #a0aec0;
-            }
-            
-            /* ───【追加・変更】投稿フォーム下部のレイアウト調整 ─── */
-            .form-footer {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .form-user-icon {
-                width: 35px;
-                height: 35px;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 1px solid var(--border-color);
-            }
-            /* ────────────────────────────────────────────────── */
-
-            button {
-                background-color: var(--button-color);
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 15px;
-                font-weight: bold;
-                cursor: pointer;
-                transition: background 0.2s;
-            }
-            button:hover:not(#like_button,#menuBtn,#themeToggleBtn) {
-                background-color: var(--button-hover-color);
-            }
-
-            /* 投稿リスト */
-            .post-card {
-                position: relative;
-                background: var(--card-bg);
-                border-radius: 12px;
-                padding: 15px 20px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-                margin-bottom: 12px;
-                border: 1px solid var(--border-color);
-            }
-            .post-card-link {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 1; /* カード内の通常テキスト（詳細リンク）のレイヤー */
-            }
-            .front-link {
-                position: relative;
-                z-index: 2; /* 詳細リンク(z-index:1)より手前に出すことで個別にクリック可能に */
-            }
-            
-            /* 上部: ユーザー情報エリア */
-            .post-header {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-bottom: 12px;
-                border-bottom: 1px solid var(--border-color);
-                padding-bottom: 10px;
-            }
-            .post-icon {
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 1px solid var(--border-color);
-                flex-shrink: 0;
-            }
-            .post-meta {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-            .post-name-row {
-                display: flex;
-                flex-direction: column; /* 横並びから縦並びにし、detail.phpと統一 */
-            }
-            .post-nickname {
-                font-weight: bold;
-                color: var(--primary-color);
-                font-size: 15px;
-            }
-            .post-username {
-                font-size: 12px;
-                color: #a0aec0;
-                margin-top: 2px;
-                text-decoration: underline;
-                text-decoration-color: #a0aec0;
-                text-decoration-thickness: 1px; 
-            }
-            
-            /* 中央: 本文エリア */
-            .post-content {
-                font-size: 15px;
-                line-height: 1.6;
-                white-space: pre-wrap;
-                margin: 0 0 12px 0; /* 下部に余白を確保 */
-                overflow-wrap: anywhere;
-                word-break: break-word;
-            }
-            .post-actions {
-                margin-bottom: 8px;
-            }
-/* ── 添付ファイルエリア（変更・追加分） ── */
-        .attachment-list {
-            margin-bottom: 5px;
-        }
-            /* 既存の.attachment-itemを置き換え */
-            .attachment-item {
-                position: relative; /* メニューの基準位置にする */
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-                padding: 6px 8px 6px 10px;
-                border: 1px solid var(--border-color);
-                border-radius: 6px;
-                font-size: 13px;
-                background: var(--bg-color);
-                margin-bottom: 5px;
-            }
-
-            .attachment-link {
-                color: var(--primary-color);
-                text-decoration: none;
-                word-break: break-all;
-            }
-            .attachment-link:hover {
-                text-decoration: underline;
-            }
-
-            .attachment-size {
-                color: #a0aec0;
-                font-size: 12px;
-                white-space: nowrap;
-            }
-
-            /* ⋮ メニューボタン */
-            .attachment-menu-btn {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 22px;
-                height: 22px;
-                padding: 0;
-                margin-left: 2px;
-                background: none;
-                border: none;
-                border-radius: 50%;
-                color: #a0aec0;
-                cursor: pointer;
-                transition: background 0.15s, color 0.15s;
-                flex-shrink: 0;
-            }
-            .attachment-menu-btn:hover,
-            .attachment-menu-btn[aria-expanded="true"] {
-                background: var(--border-color);
-                color: var(--primary-color);
-            }
-
-            /* ドロップダウンメニュー本体 */
-            .attachment-menu {
-                position: absolute;
-                top: calc(100% + 4px);
-                right: 0;
-                min-width: 120px;
-                background: var(--card-bg);
-                border: 1px solid var(--border-color);
-                border-radius: 8px;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-                overflow: hidden;
-                z-index: 10; /* .front-link(z-index:2)よりさらに手前 */
-            }
-
-            .attachment-menu-item {
-                display: block;
-                width: 100%;
-                box-sizing: border-box;
-                padding: 8px 14px;
-                background: none;
-                border: none;
-                text-align: left;
-                font-size: 13px;
-                color: var(--text-color);
-                text-decoration: none;
-                cursor: pointer;
-                white-space: nowrap;
-            }
-            /* メニューが開いている添付ファイルだけ最前面に出す */
-            .attachment-item.menu-open {
-                z-index: 5; /* 他の .attachment-item (z-index:2) より手前に */
-            }
-            .attachment-menu-item:hover {
-                background: var(--bg-color);
-            }
-            .attachment-menu-item.attachment-report-btn {
-                color: #e53e3e; /* 通報は注意喚起色に */
-            }
-            .attachment-size {
-                color: #a0aec0;
-                font-size: 12px;
-            }
-            .post-actions {
-                display: flex;
-                align-items: center;
-                gap: 24px;
-                margin-bottom: 10px;
-            }
-            .action-btn {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                background: none;
-                border: none;
-                cursor: pointer;
-                color: #a0aec0;
-                font-size: 14px;
-                padding: 4px;
-                border-radius: 20px;
-                text-decoration: none;
-                transition: color 0.2s;
-            }
-            .action-btn:hover {
-                color: var(--primary-color);
-            }
-            .action-count {
-                font-size: 13px;
-            }
-            .like-btn.liked {
-                color: #e53e3e;
-            }
-            .like-btn.liked svg {
-                fill: #e53e3e;
-                stroke: #e53e3e;
-            }
-            .like-btn:hover {
-                color: #e53e3e;
-            }
-            /* 下部: 日時エリア */
-            .post-time {
-                font-size: 12px;
-                color: #a0aec0;
-                border-top: 1px solid var(--border-color);
-                padding-top: 8px;
-            }
-
             .menu-btn {
                 width: 30px;
                 height: 24px;
@@ -433,6 +203,20 @@ function linkifyContent($rawText) {
                 border-radius: 2px;
                 transition: background-color 0.3s;
             }
+            /* ───【追加・変更】投稿フォーム下部のレイアウト調整 ─── */
+            .form-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .form-user-icon {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 1px solid var(--border-color);
+            }
+            /* ────────────────────────────────────────────────── */
 
             /* サイドメニュー */
             .side-menu {
@@ -591,7 +375,7 @@ function linkifyContent($rawText) {
             <div class="card">
                 <form action="timeline.php" method="post" enctype="multipart/form-data">
                 <div class="textarea-wrap">
-                    <textarea name="content" rows="3" placeholder="何かつぶやいてみよう！"></textarea>
+                    <textarea name="content" rows="3" placeholder="何かつぶやいてみよう！" id="foo"></textarea>
                     <div class="textarea-toolbar">
                         <label for="attachments" class="attach-label">📁</label>
                         <span id="attach-count"></span>
@@ -774,18 +558,6 @@ console.log('取得したpost_id:', post_id); // ← 追加
 <script>
 
 const textarea = document.querySelector('textarea[name="content"]');
-const submitBtn = document.querySelector('button[type="submit"]');
-
-// 初期状態は無効
-submitBtn.disabled = true;
-submitBtn.style.opacity = '0.5';
-
-textarea.addEventListener('input', () => {
-    const isEmpty = textarea.value.trim() === '';
-    submitBtn.disabled = isEmpty;
-    submitBtn.style.opacity = isEmpty ? '0.5' : '1';
-});
-
 
 
 function linkifyText(rawText) {
