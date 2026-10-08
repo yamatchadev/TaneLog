@@ -9,7 +9,7 @@ function sendGmail(string $to, string $subject, string $body): void
     $client->setClientSecret($clientsecret);
 
     // 保存済みトークンを読み込む
-    $tokenData = json_decode(file_get_contents('../token_gmail.json'), true);
+    $tokenData = json_decode(file_get_contents('C:/yamatcha_env/token_gmail.json'), true);
     $client->setAccessToken($tokenData);
 
     // トークンが期限切れなら自動更新
