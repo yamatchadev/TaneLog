@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/db.php';
-require_once __DIR__ . '/secret.php';
+require_once 'C:/yamatcha_env/secret.php';
 $error = "";
 
-if(isset($_GET['token'])){
+if(isset($_SESSION['token'])){
     $info = "メールを送信しました。メールに記載された認証コードを入力してください。";
-    $token = $_GET['token'];
+    $token = $_SESSION['token'];
     $stmt = $pdo->prepare("SELECT * FROM pre_users WHERE token = ? AND verified = 0");
     $stmt->execute([$token]);
     $valid_token = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -28,11 +28,12 @@ if(isset($_GET['token'])){
 
         }
     }else{
-        $error = "URLが期限切れか、誤っています。再度認証してください。";
-        header("Refresh: 3; url=/index.php");
+        $error = "無効な操作です。もう一度やり直してください。";
+        header("Refresh: 3; url=/send_email.php");
     }
 }else{
-    $error = "トークンがセットされていません";
+    $error = "内部エラーが発生しました。もう一度やり直してください。";
+    header("Refresh: 3; url=/send_email.php");
 }
 
 ?>
@@ -174,7 +175,7 @@ if(isset($_GET['token'])){
             <?php if (!empty($info)):?>
                 <div class="info-msg"><?= $info ?></div>
             <?php endif;?>
-            <form action="verify_email.php?token=<?= $_GET['token']; ?>" method="post">
+            <form action="verify_email.php" method="post">
                 <div class="form-group">
                     <label>認証コード</label>
                     <input type="text" name="verify_code" required>

@@ -27,8 +27,9 @@ if(isset($_POST['email'])){
                 EOT;
 
             sendGmail($email, $subject, $body);
-            header("Location:".$_SERVER['REQUEST_URI']. "/../verify_email.php?token=".$token);   
-            }
+            $_SESSION['token'] = $token;
+            header("Location:".$_SERVER['REQUEST_URI']. "/../verify_email.php");   
+        }
 
     } else {
         $error = "メールアドレスが無効です。";

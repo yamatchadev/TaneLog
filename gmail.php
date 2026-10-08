@@ -3,7 +3,7 @@ require 'vendor/autoload.php';
 
 function sendGmail(string $to, string $subject, string $body): void
 {
-    require_once 'secret.php';
+    require_once 'C:/yamatcha_env/secret.php';
     $client = new Google\Client();
     $client->setClientId($clientid);
     $client->setClientSecret($clientsecret);

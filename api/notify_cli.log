@@ -481,3 +481,8 @@
 [2026-10-05 05:30:44] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?)
 [2026-10-05 05:30:44] 取得した購読数: 0
 [2026-10-05 05:30:44] 通知送信処理が正常に完了しました
+[2026-10-07 06:23:59] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16,40,17,18,33,31],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：https:\/\/store.steampowered.com…","url":"\/detail.php?contentid=715818462448885"}
+[2026-10-07 06:24:00] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?,?,?,?,?,?)
+[2026-10-07 06:24:00] 取得した購読数: 1
+[2026-10-07 06:24:00] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-10-07 06:24:00] 通知送信処理が正常に完了しました

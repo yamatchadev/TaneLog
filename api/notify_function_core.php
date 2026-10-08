@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../secret.php';
+require_once 'C:/yamatcha_env/secret.php';
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
 

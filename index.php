@@ -1,5 +1,7 @@
 <?php
-session_start();
+if(session_status() === PHP_SESSION_NONE){
+    session_start();
+}
 $debug = "";
 // すでにログイン済みだったらtimeline.phpに遷移
 if(isset($_SESSION['user_id'])) {
