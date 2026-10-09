@@ -206,4 +206,14 @@ header img {
                 background-color: #9b2c2c;
                 color: #fff;
             }
-            
+            .info-msg {
+                color: #1bac2a;
+                border: 1px solid #d7fedd;
+                font-size: 14px;  
+                background-color: #f6fff4;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+                margin-bottom: 12px;
+                border: 1px solid var(--border-color);
+            }

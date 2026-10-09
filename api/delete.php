@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/logincheck.php';
 require_once __DIR__.'/../db.php';
+$_SESSION['deleted'] = false;
 if($_GET['contentid']){
     if(isset($_SESSION['user_id'])){
         $contentid = htmlspecialchars($_GET['contentid']);
@@ -14,8 +15,8 @@ if($_GET['contentid']){
         if($content_user_id === $user_id){
             $stmt=$pdo->prepare("UPDATE posts SET deleted = 1 WHERE content_id = ?");
             $stmt->execute([$contentid]);
+            $_SESSION['deleted'] = true;
             header('Location: ../detail.php?contentid='.$contentid);
-            exit();
         }else{
             $contentid = htmlspecialchars($_GET['contentid']);
             header('Location: ../detail.php?contentid='.$contentid);

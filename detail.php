@@ -8,6 +8,12 @@ $deleteable = "false";
 $deleteclass = "hidden"; 
 $replies = [];
 $show_reply = "off";
+if (isset($_SESSION['deleted']) && $_SESSION['deleted'] === true){
+    $url = "https://".$_SERVER['HTTP_HOST']."/timeline.php";
+    header("Refresh: 3; URL={$url}");
+    $_SESSION['deleted'] = false;
+    $info = "投稿を削除しました。";
+}
 if (isset($_GET['contentid'])) {
     //timeline.phpからリプライ遷移
     if (!isset($_GET['post']) || $_GET['post'] === '0'){
@@ -781,10 +787,14 @@ function linkifyContent($rawText) {
         <main class="container">
             <div class="back-nav">
                 <a href="<?php if(isset($_SERVER['HTTP_REFERER'])){if($_SERVER['HTTP_REFERER'] !== "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']){echo $_SERVER['HTTP_REFERER'] ?? 'timeline.php';}else{echo 'timeline.php';}}?>" class="back-link">← 戻る</a>
-            </div>
+            </div> 
+            <?php if(isset($info)):?>
+                <div class="info-msg"><?= $info; ?></div>
+            <?php endif;?>
             <?php if(isset($post_error)):?>
             <div class="error-msg"><?php echo $post_error;?></div>
             <?php endif;?>
+
             <div class="post-card" style="display:<?php if(isset($post_error)){echo "none;";}?>">
                 <div class="post-header">
 
