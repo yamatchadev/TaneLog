@@ -7,25 +7,27 @@ $deleteurl = "";
 $deleteable = "false";
 $deleteclass = "hidden"; 
 $replies = [];
-$show_reply = "off";
+$show_reply = false;
+if(!isset($_GET['contentid'])){
+    header('Location: timeline.php');
+    exit;
+}
 if (isset($_SESSION['deleted']) && $_SESSION['deleted'] === true){
     $url = "https://".$_SERVER['HTTP_HOST']."/timeline.php";
     header("Refresh: 3; URL={$url}");
     $_SESSION['deleted'] = false;
     $info = "投稿を削除しました。";
 }
-if (isset($_GET['contentid'])) {
-    //timeline.phpからリプライ遷移
-    if (!isset($_GET['post']) || $_GET['post'] === '0'){
-        if (isset($_GET['reply']) && $_GET['reply'] === '1'){
-            $show_reply = "on";            
-        }else{
-            $show_reply = "off";
-        }
-    }else{
-        $show_reply = "off";
-    }
-
+if(isset($_GET['reply']) && $_GET['reply'] === '1'){
+    $url = 'detail.php?contentid='.$_GET['contentid'];
+    $_SESSION['send_reply'] = true;
+    header("Location: $url");
+    exit;
+}
+if (isset($_SESSION['send_reply']) && $_SESSION['send_reply']){
+    $show_reply = true;            
+    unset($_SESSION['send_reply']);
+}
     $contentid = htmlspecialchars($_GET['contentid']);
     // JOINを使って投稿と投稿者情報を一括取得(AI)
     $stmt = $pdo->prepare(
@@ -86,9 +88,6 @@ if (isset($_GET['contentid'])) {
         $post_error = "投稿が存在しません。コンテンツIDを確認してください。";    
         $post_not_exist = "yes";
     }
-}else{
-    $post_error = "不正なリクエストです。";
-}
 if(!isset($post_not_exist)){
     $iconSrc = ($post['icon_path'] && file_exists(__DIR__ . '/' . $post['icon_path']))
             ? htmlspecialchars($post['icon_path'])
@@ -752,7 +751,7 @@ function linkifyContent($rawText) {
     </div>
 </div>
 
-<?php if ($show_reply === "on"): ?>
+<?php if ($show_reply): ?>
 <div class="reply-overlay" id="replyOverlay">
     <div class="reply-modal">
         <div class="reply-modal-header">
@@ -873,7 +872,6 @@ function linkifyContent($rawText) {
                 <div class="post-time"><?= htmlspecialchars($post['created_at']) ?></div>
             </div>
         <a href="<?= $deleteurl; ?>" class="<?= $deleteclass; ?>" style="color: #e53e3e;">この投稿を削除</a>
-        <?php if($show_reply === "on"){echo "リプライON";}; ?>
             
 
 

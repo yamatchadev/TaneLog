@@ -18,7 +18,9 @@ if ($content === '') {
     exit;
 }
 
-$content_clean = htmlspecialchars($content);
+//$content_clean = htmlspecialchars($content);
+//投稿表示するときにエスケープするのでこの時点では要らない
+$content_clean = $content;
 $content_id = '';
 for ($i = 0; $i < 15; $i++) {
     $content_id .= random_int(0, 9);
