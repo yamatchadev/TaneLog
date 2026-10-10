@@ -2,6 +2,12 @@
 if(session_status() === PHP_SESSION_NONE){
     session_start();
 }
+if(isset($_SESSION['view_contentid'])){
+    header('Location: #'.$_SESSION['view_contentid']);
+    unset($_SESSION['view_contentid']);
+    exit;
+}
+
 
 $page = basename(__FILE__);
 
@@ -16,7 +22,8 @@ $user_stmt->execute([$_SESSION['user_id']]);
 $current_user = $user_stmt->fetch(PDO::FETCH_ASSOC);
 if(!$current_user){
     $_SESSION['error-msg'] = "ユーザー情報が存在しません。";
-    header('Location: login.php');
+    header('Location: logout.php');
+    exit;
 }
 // ログインユーザー用のアイコンパスを確定
 $current_icon_src = ($current_user['icon_path'] && file_exists(__DIR__ . '/' . $current_user['icon_path']))
@@ -98,36 +105,6 @@ function linkifyContent($rawText) {
         <link rel="apple-touch-icon" href="/icon/icon-192.png">
         <script src="js/tinymce/tinymce.min.js"></script>
         <script>
-            const submitBtn = document.querySelector('button[type="submit"]');
-
-            function updateSubmitState(editor) {
-                if (!submitBtn) return;
-                const isEmpty = editor.getContent({ format: 'text' }).trim() === '';
-                submitBtn.disabled = isEmpty;
-                submitBtn.style.opacity = isEmpty ? '0.5' : '1';
-            }
-
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.5';
-            }
-
-            tinymce.init({
-                selector: '#foo',
-                language: 'ja',
-                license_key: 'gpl',
-                height: 300,
-                menubar: false,
-                statusbar: false,
-                plugins: 'lists',
-                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | forecolor',
-                setup: (editor) => {
-                    editor.on('init input keyup change SetContent Undo Redo', () => {
-                    updateSubmitState(editor);
-                    });
-                }
-            });
-
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js');
@@ -149,7 +126,6 @@ function linkifyContent($rawText) {
                 box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
                 margin-bottom: 20px;
                 border: 1px solid var(--border-color);
-
             }
             textarea {
                 width: 100%;
@@ -184,25 +160,6 @@ function linkifyContent($rawText) {
                 align-items: center;
                 gap: 8px;
             }
-            .menu-btn {
-                width: 30px;
-                height: 24px;
-                background: none;
-                border: none;
-                cursor: pointer;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                padding: 0;
-            }
-            .menu-btn span {
-                display: block;
-                width: 100%;
-                height: 3px;
-                background-color: var(--text-color);
-                border-radius: 2px;
-                transition: background-color 0.3s;
-            }
             /* ───【追加・変更】投稿フォーム下部のレイアウト調整 ─── */
             .form-footer {
                 display: flex;
@@ -216,141 +173,6 @@ function linkifyContent($rawText) {
                 object-fit: cover;
                 border: 1px solid var(--border-color);
             }
-            /* ────────────────────────────────────────────────── */
-
-            /* サイドメニュー */
-            .side-menu {
-                position: fixed;
-                top: 0;
-                right: -300px;
-                width: 260px;
-                height: 100%;
-                background-color: #2d3748;
-                transition: right 0.3s ease;
-                z-index: 99;
-                box-shadow: -4px 0 10px rgba(0,0,0,0.1);
-            }
-            .side-menu.active {
-                right: 0;
-            }
-
-            /* メニュー内の閉じるボタンエリア */
-            .menu-close-wrapper {
-                display: flex;
-                justify-content: flex-end;
-                padding: 15px 20px;
-            }
-            .close-btn {
-                background: none;
-                border: none;
-                color: #a0aec0;
-                font-size: 28px;
-                cursor: pointer;
-                line-height: 1;
-                padding: 0;
-            }
-            .close-btn:hover {
-                color: #fff;
-            }
-
-            .side-menu ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-            .side-menu ul li a {
-                display: block;
-                padding: 16px 24px;
-                color: #e2e8f0;
-                text-decoration: none;
-                font-size: 16px;
-                border-bottom: 1px solid #4a5568;
-                transition: background 0.2s;
-            }
-            .side-menu ul li a:hover {
-                background-color: #4a5568;
-                color: #fff;
-            }
-            .side-menu ul li.danger a {
-                color: #feb2b2;
-            }
-            .side-menu ul li.danger a:hover {
-                background-color: #9b2c2c;
-                color: #fff;
-            }
-
-            .attachment-preview {
-                border-radius: 10px;
-                border: 1px solid var(--border-color);
-            }
-.attachment-image {
-    width: calc(50% - 3px);
-    max-height: 180px;
-    object-fit: cover;
-    cursor: zoom-in;
-    border-radius: 10px;
-}
-            .attachment-video {
-                max-width: calc(50% - 3px);
-                background: #000;
-                border-radius: 10px;
-            }
-            .attachment-audio {
-                width: 100%;
-            }
-            .lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 300;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: overlayIn 0.2s ease;
-}
-.lightbox-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-}
-.lightbox-content {
-    position: relative;
-    z-index: 1;
-    max-width: 90vw;
-    max-height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.lightbox-content img,
-.lightbox-content video {
-    max-width: 90vw;
-    max-height: 90vh;
-    border-radius: 10px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-}
-.lightbox-close {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    background: rgba(0,0,0,0.5);
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #fff;
-    padding: 0;
-    transition: background 0.2s;
-}
-.lightbox-close:hover {
-    background: rgba(0,0,0,0.8);
-}
-
 
         </style>
     </head>
@@ -370,111 +192,16 @@ function linkifyContent($rawText) {
     </div>
 </div>
 <?php require_once 'header.php';?>
-
-        <main class="container">
-            <div class="card">
-                <form action="timeline.php" method="post" enctype="multipart/form-data">
-                <div class="textarea-wrap">
-                    <textarea name="content" rows="3" placeholder="何かつぶやいてみよう！" id="foo"></textarea>
-                    <div class="textarea-toolbar">
-                        <label for="attachments" class="attach-label">📁</label>
-                        <span id="attach-count"></span>
-                    </div>
-                </div>
-                <input type="file" id="attachments" name="attachments[]" multiple style="display:none;">
-                <div id="progress-area"></div>
-                <div class="form-footer">
-                    <a href="<?= "profile.php?username=".$current_user['username']; ?>">
-                        <img src="<?= $current_icon_src ?>" alt="マイアイコン" class="form-user-icon">
-                    </a>
-                    <button type="submit">投稿する</button>
-                </div>
-                </form>
-            </div>
+<main class="container">
+    <?php $_SESSION['form_url'] = "timeline.php";?>
+    <?php require_once 'postform.php';?>
 <script>
-document.getElementById('attachments').addEventListener('change', function () {
-    const count = this.files.length;
-    document.getElementById('attach-count').textContent = count > 0 ? count + '件選択中' : '';
-});
 
-const CHUNK_SIZE = 50 * 1024 * 1024; // 50MB
-
-document.querySelector('form').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const content = document.querySelector('textarea[name="content"]').value.trim();
-    const files = document.getElementById('attachments').files;
-
-    if (content === '' && files.length === 0) return;
-
-    // 投稿テキストを先にPOSTしてpost_idを取得
-    const formData = new FormData();
-    formData.append('content', content);
-
-const postRes = await fetch('api/post.php', { method: 'POST', body: formData });
-const postJson = await postRes.json();
-
-console.log('post.phpのレスポンス:', postJson); // ← 追加
-
-if (!postJson.ok) {
-    alert('投稿に失敗しました');
-    return;
-}
-
-const post_id = postJson.post_id;
-console.log('取得したpost_id:', post_id); // ← 追加
-    // ファイルがあればチャンクアップロード
-    if (files.length > 0) {
-        const progressArea = document.getElementById('progress-area');
-        progressArea.innerHTML = '';
-
-        for (const file of files) {
-            const upload_id = crypto.randomUUID().replace(/-/g, '');
-            const total_chunks = Math.ceil(file.size / CHUNK_SIZE);
-
-            // 進捗バーを追加
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = `
-                <span>${file.name}</span>
-                <progress value="0" max="${total_chunks}"></progress>
-                <span class="progress-label">0 / ${total_chunks}</span>
-            `;
-            progressArea.appendChild(wrapper);
-            const bar   = wrapper.querySelector('progress');
-            const label = wrapper.querySelector('.progress-label');
-
-            for (let i = 0; i < total_chunks; i++) {
-                const chunk = file.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
-
-                const cd = new FormData();
-                cd.append('upload_id',     upload_id);
-                cd.append('chunk_index',   i);
-                cd.append('total_chunks',  total_chunks);
-                cd.append('original_name', file.name);
-                cd.append('post_id',       post_id);
-                cd.append('chunk',         chunk);
-
-                const res  = await fetch('upload_chunk.php', { method: 'POST', body: cd });
-                const json = await res.json();
-
-                if (!json.ok) {
-                    alert(`${file.name} のアップロードに失敗しました`);
-                    break;
-                }
-
-                bar.value = i + 1;
-                label.textContent = `${i + 1} / ${total_chunks}`;
-            }
-        }
-    }
-
-    window.location.href = 'timeline.php';
-});
 </script>
 
             <div class="post-list" id="postList">
                 <?php foreach ($posts as $p): ?>
-                    <div class="post-card">
+                    <div class="post-card" id="<?= $p['content_id'] ?>">
 
                         <a href="detail.php?contentid=<?= htmlspecialchars($p['content_id']) ?>" class="post-card-link" aria-label="投稿の詳細を見る"></a>
 
@@ -492,7 +219,7 @@ console.log('取得したpost_id:', post_id); // ← 追加
                                 </div>
                             </div>
                         </div>
-                        <p class="post-content"><?= linkifyContent($p['content']) ?></p>
+                        <p class="post-content"><?= $p['content']; ?></p>
 
                         <!-- 添付ファイル -->
                         <?php if (!empty($attachments_map[$p['id']])): ?>
@@ -560,27 +287,7 @@ console.log('取得したpost_id:', post_id); // ← 追加
 const textarea = document.querySelector('textarea[name="content"]');
 
 
-function linkifyText(rawText) {
-    // 1. HTMLエスケープ
-    const div = document.createElement('div');
-    div.textContent = rawText;
-    let escaped = div.innerHTML;
 
-    // 2. URLを検出してリンク化
-    const urlPattern = /(https?:\/\/[^\s<]+)/gi;
-    escaped = escaped.replace(urlPattern, (url) => {
-        // 末尾の句読点・記号をリンクの外に出す
-        const trailingMatch = url.match(/[).,!?、。」』]+$/);
-        let trailing = '';
-        if (trailingMatch) {
-            trailing = trailingMatch[0];
-            url = url.slice(0, -trailing.length);
-        }
-        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="front-link">${url}</a>${trailing}`;
-    });
-
-    return escaped;
-}
 // ── リアルタイム更新 ──────────────────────────
 let latestId = <?= (int)$latest_id ?>;
 const postList = document.getElementById('postList');
@@ -639,13 +346,13 @@ async function checkNewPosts() {
 }
 
 // タブが見えているときだけポーリング（負荷対策）
-let timer = setInterval(checkNewPosts, 4000);
+let timer = setInterval(checkNewPosts, 10000);
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
         clearInterval(timer);
     } else {
         checkNewPosts(); // タブに戻った瞬間に即チェック
-        timer = setInterval(checkNewPosts, 4000);
+        timer = setInterval(checkNewPosts, 10000);
     }
 });
 

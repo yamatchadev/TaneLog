@@ -3,18 +3,24 @@ if(session_status() === PHP_SESSION_NONE){
     session_start();
 }
 $debug = "";
+require_once __DIR__.'/db.php';
 // すでにログイン済みだったらtimeline.phpに遷移
 if(isset($_SESSION['user_id'])) {
     if(isset($_SESSION['redirect_after_login'])){
+        $stmt = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
         header('Location:'.$_SESSION['redirect_after_login']);
+        unset($_SESSION['redirect_after_login']);
         exit;
     }else{
+        $stmt = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
         header('Location: timeline.php');
         exit;
     }
 } elseif(isset($_COOKIE['remember_token'])) {
 
-    require_once __DIR__.'/db.php';
+    
     $token = hash('sha256',$_COOKIE['remember_token']);
     $stmt = $pdo->prepare("SELECT * FROM users WHERE remember_token = ?");
     $stmt->execute([$token]);
@@ -29,7 +35,9 @@ if(isset($_SESSION['user_id'])) {
         $stmt = $pdo->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
         $stmt->execute([$newtoken,$user['id']]);
         if($stmt){
-            header('Location: timeline.php');            
+            $stmt = $pdo->query("INSERT INTO users (last_login) VALUES (NOW)");
+            header('Location: timeline.php');      
+            exit;      
         }else{
             $error = "DBへのトークン登録に失敗しました。";
             $debug = "DBのUPDATE操作に失敗しました。";
@@ -65,6 +73,7 @@ if(isset($_SESSION['user_id'])) {
                 ]);                
             }else{
                 header('dberror.php');
+                exit;
             }
 
             if(isset($_SESSION['redirect_after_login'])){

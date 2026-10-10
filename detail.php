@@ -1,22 +1,25 @@
 <?php
+
+if(!isset($_GET['contentid'])){
+    header('Location: timeline.php');
+    exit;
+}
 require_once 'api/logincheck.php';
 require_once 'db.php';
-
 $post = null;
 $deleteurl = "";
 $deleteable = "false";
 $deleteclass = "hidden"; 
 $replies = [];
 $show_reply = false;
-if(!isset($_GET['contentid'])){
-    header('Location: timeline.php');
-    exit;
-}
+
+$_SESSION['view_contentid'] = htmlspecialchars($_GET['contentid']);
+
 if (isset($_SESSION['deleted']) && $_SESSION['deleted'] === true){
     $url = "https://".$_SERVER['HTTP_HOST']."/timeline.php";
     header("Refresh: 3; URL={$url}");
     $_SESSION['deleted'] = false;
-    $info = "投稿を削除しました。";
+    $info = "投稿を削除しました。3秒後にタイムラインに戻ります。";
 }
 if(isset($_GET['reply']) && $_GET['reply'] === '1'){
     $url = 'detail.php?contentid='.$_GET['contentid'];
@@ -25,7 +28,7 @@ if(isset($_GET['reply']) && $_GET['reply'] === '1'){
     exit;
 }
 if (isset($_SESSION['send_reply']) && $_SESSION['send_reply']){
-    $show_reply = true;            
+    $show_reply = true;     
     unset($_SESSION['send_reply']);
 }
     $contentid = htmlspecialchars($_GET['contentid']);
@@ -51,7 +54,6 @@ if (isset($_SESSION['send_reply']) && $_SESSION['send_reply']){
     if ($post) {
         if($post['deleted'] == 1){
             $post_error = "削除された投稿です。";
-            
         }else{
             $att_stmt = $pdo->prepare("SELECT * FROM attachments WHERE post_id = ? ORDER BY id ASC");
             $att_stmt->execute([$post['id']]);
@@ -84,9 +86,6 @@ if (isset($_SESSION['send_reply']) && $_SESSION['send_reply']){
             $replies->execute([$_SESSION["user_id"],$post['id']]);
             $replies=$replies->fetchAll();
         }
-    }else{
-        $post_error = "投稿が存在しません。コンテンツIDを確認してください。";    
-        $post_not_exist = "yes";
     }
 if(!isset($post_not_exist)){
     $iconSrc = ($post['icon_path'] && file_exists(__DIR__ . '/' . $post['icon_path']))
@@ -137,226 +136,17 @@ function linkifyContent($rawText) {
                 
         <script src="js/sidemenu.js"></script>
         <script src="js/theme.js"></script>
-
+        <script src="js/tinymce/tinymce.min.js"></script>
+        <script>
+        </script>
         <style>
             .container {
                 max-width: 600px;
                 margin: 0 auto;
                 padding: 20px 15px;
             }
-            .error-msg {
-                background-color: #fff5f5;
-                color: #c53030;
-                border-radius: 6px;
-                font-size: 14px;
-                border-radius: 12px;
-                padding: 20px;
-                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-                margin-bottom: 12px;
-                border: 1px solid var(--border-color);
-            }
-            /* 詳細表示用のカードスタイル */
-            .post-card {
-                position: relative;
-                background: var(--card-bg);
-                border-radius: 12px;
-                padding: 15px 20px;
-                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-                margin-bottom: 12px;
-                border: 1px solid var(--border-color);
-            }
-            .front-link {
-                position: relative;
-                z-index: 2;
-            }
-            .post-header {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                margin-bottom: 15px;
-                border-bottom: 1px solid var(--border-color);
-                padding-bottom: 12px;
-            }
-            .post-icon {
-                width: 48px;
-                height: 48px;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 1px solid var(--border-color);
-                flex-shrink: 0;
-            }
-            .post-nickname {
-                font-weight: bold;
-                font-size: 16px;
-                color: var(--primary-color);
-            }
-            .post-username {
-                font-size: 13px;
-                color: #a0aec0;
-                margin-top: 2px;
-                text-decoration: underline;
-                text-decoration-color: #a0aec0;
-                text-decoration-thickness: 1px; 
-            }
-            .post-meta {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-            .post-name-column {
-                display: flex;
-                flex-direction: column;
-            }
-            .post-time {
-                font-size: 12px;
-                color: #a0aec0;
-                margin-top: 15px;
-                border-top: 1px solid var(--border-color);
-                padding-top: 8px;
-            }
-            .post-content {
-                font-size: 16px;
-                line-height: 1.6;
-                white-space: pre-wrap;
-                margin: 0 0 12px 0;
-                overflow-wrap: anywhere;
-                word-break: break-word;
-            }
-                /* 添付ファイルエリア */
-/* ── 添付ファイルエリア（変更・追加分） ── */
-        .attachment-list {
-            margin-bottom: 5px;
-        }
-            /* 既存の.attachment-itemを置き換え */
-            .attachment-item {
-                position: relative; /* メニューの基準位置にする */
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-                padding: 6px 8px 6px 10px;
-                border: 1px solid var(--border-color);
-                border-radius: 6px;
-                font-size: 13px;
-                background: var(--bg-color);
-                margin-bottom: 5px;
-            }
 
-            .attachment-link {
-                color: var(--primary-color);
-                text-decoration: none;
-                word-break: break-all;
-            }
-            .attachment-link:hover {
-                text-decoration: underline;
-            }
 
-            .attachment-size {
-                color: #a0aec0;
-                font-size: 12px;
-                white-space: nowrap;
-            }
-
-            /* ⋮ メニューボタン */
-            .attachment-menu-btn {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 22px;
-                height: 22px;
-                padding: 0;
-                margin-left: 2px;
-                background: none;
-                border: none;
-                border-radius: 50%;
-                color: #a0aec0;
-                cursor: pointer;
-                transition: background 0.15s, color 0.15s;
-                flex-shrink: 0;
-            }
-            .attachment-menu-btn:hover,
-            .attachment-menu-btn[aria-expanded="true"] {
-                background: var(--border-color);
-                color: var(--primary-color);
-            }
-
-            /* ドロップダウンメニュー本体 */
-            .attachment-menu {
-                position: absolute;
-                top: calc(100% + 4px);
-                right: 0;
-                min-width: 120px;
-                background: var(--card-bg);
-                border: 1px solid var(--border-color);
-                border-radius: 8px;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-                overflow: hidden;
-                z-index: 10; /* .front-link(z-index:2)よりさらに手前 */
-            }
-
-            .attachment-menu-item {
-                display: block;
-                width: 100%;
-                box-sizing: border-box;
-                padding: 8px 14px;
-                background: none;
-                border: none;
-                text-align: left;
-                font-size: 13px;
-                color: var(--text-color);
-                text-decoration: none;
-                cursor: pointer;
-                white-space: nowrap;
-            }
-            /* メニューが開いている添付ファイルだけ最前面に出す */
-            .attachment-item.menu-open {
-                z-index: 5; /* 他の .attachment-item (z-index:2) より手前に */
-            }
-            .attachment-menu-item:hover {
-                background: var(--bg-color);
-            }
-            .attachment-menu-item.attachment-report-btn {
-                color: #e53e3e; /* 通報は注意喚起色に */
-            }
-            .attachment-size {
-                color: #a0aec0;
-                font-size: 12px;
-            }
-.post-actions {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-bottom: 10px;
-}
-.action-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #a0aec0;
-    font-size: 14px;
-    padding: 4px;
-    border-radius: 20px;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-.action-btn:hover {
-    color: var(--primary-color);
-}
-.action-count {
-    font-size: 13px;
-}
-.like-btn.liked {
-    color: #e53e3e;
-}
-.like-btn.liked svg {
-    fill: #e53e3e;
-    stroke: #e53e3e;
-}
-.like-btn:hover {
-    color: #e53e3e;
-}
             /* タイムラインに戻るボタン */
             .back-nav {
                 margin-bottom: 15px;
@@ -377,98 +167,7 @@ function linkifyContent($rawText) {
                 text-decoration: underline;
             }
 
-            .menu-btn {
-                width: 30px;
-                height: 24px;
-                background: none;
-                border: none;
-                cursor: pointer;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                padding: 0;
-            }
-            .menu-btn span {
-                display: block;
-                width: 100%;
-                height: 3px;
-                background-color: var(--text-color);
-                border-radius: 2px;
-                transition: background-color 0.3s;
-            }
 
-            /* サイドメニュー */
-            .side-menu {
-                position: fixed;
-                top: 0;
-                right: -300px;
-                width: 260px;
-                height: 100%;
-                background-color: #2d3748;
-                transition: right 0.3s ease;
-                z-index: 99;
-                box-shadow: -4px 0 10px rgba(0,0,0,0.1);
-            }
-            .side-menu.active {
-                right: 0;
-            }
-
-            .menu-close-wrapper {
-                display: flex;
-                justify-content: flex-end;
-                padding: 15px 20px;
-            }
-            .close-btn {
-                background: none;
-                border: none;
-                color: #a0aec0;
-                font-size: 28px;
-                cursor: pointer;
-                line-height: 1;
-                padding: 0;
-            }
-            .close-btn:hover {
-                color: #fff;
-            }
-
-            .side-menu ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-            .side-menu ul li a {
-                display: block;
-                padding: 16px 24px;
-                color: #e2e8f0;
-                text-decoration: none;
-                font-size: 16px;
-                border-bottom: 1px solid #4a5568;
-                transition: background 0.2s;
-            }
-            .side-menu ul li a:hover {
-                background-color: #4a5568;
-                color: #fff;
-            }
-            .side-menu ul li.danger a {
-                color: #feb2b2;
-            }
-            .side-menu ul li.danger a:hover {
-                background-color: #9b2c2c;
-                color: #fff;
-            }
-
-            header h1 {
-	            font-weight: normal;
-	            margin: 0; padding: 0;
-	            font-size: 0.8rem;
-	            letter-spacing: 0.1em;
-            }
-
-	        @media screen and (max-width:700px) {
-                header h1 {
-                    font-size: 0.7em;
-                }
-            }
 /*リプライ画面 */
 .reply-overlay {
     position: fixed;
@@ -752,40 +451,20 @@ function linkifyContent($rawText) {
 </div>
 
 <?php if ($show_reply): ?>
-<div class="reply-overlay" id="replyOverlay">
-    <div class="reply-modal">
-        <div class="reply-modal-header">
-            <span class="reply-to-label">返信先：<strong><?= htmlspecialchars($post['nickname']) ?></strong></span>
-            <a href="detail.php?contentid=<?= htmlspecialchars($post['content_id']) ?>" class="reply-close-btn" aria-label="閉じる">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-            </a>
-        </div>
 
-        <div class="reply-origin">
-            <img src="<?= $iconSrc ?>" alt="アイコン" class="reply-origin-icon">
-            <p class="reply-origin-content"><?= htmlspecialchars(mb_strimwidth($post['content'], 0, 80, '...')) ?></p>
-        </div>
-
-        <form action="api/reply_post.php" method="post" id="replyForm">
-            <input type="hidden" name="parent_id" value="<?= (int)$post['id'] ?>">
-            <div class="reply-input-row">
-                <img src="<?= $current_icon_src ?>" alt="自分のアイコン" class="reply-my-icon">
-                <textarea name="content" id="replyContent" placeholder="返信を入力..." rows="3"></textarea>
-            </div>
-            <div class="reply-modal-footer">
-                <span class="reply-char-count"><span id="charCount">0</span> / 140</span>
-                <button type="submit" id="replySubmitBtn" disabled>返信する</button>
-            </div>
-        </form>
-    </div>
-</div>
 <?php endif; ?>
 <?php require_once 'header.php';?>
         <main class="container">
             <div class="back-nav">
-                <a href="<?php if(isset($_SERVER['HTTP_REFERER'])){if($_SERVER['HTTP_REFERER'] !== "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']){echo $_SERVER['HTTP_REFERER'] ?? 'timeline.php';}else{echo 'timeline.php';}}?>" class="back-link">← 戻る</a>
+                <a href=
+                "<?php if(isset($_SERVER['HTTP_REFERER'])){
+                    if($_SERVER['HTTP_REFERER'] !== "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']){
+                        echo $_SERVER['HTTP_REFERER'] ?? 'timeline.php';
+                    }else{
+                        echo 'timeline.php';
+                        }
+                    }
+                ?>" class="back-link">← 戻る</a>
             </div> 
             <?php if(isset($info)):?>
                 <div class="info-msg"><?= $info; ?></div>
@@ -810,7 +489,7 @@ function linkifyContent($rawText) {
                     </div>
                 </div>
                 
-                <p class="post-content"><?= linkifyContent($post['content']) ?></p>
+                <p class="post-content"><?= $post['content'];?></p>
                 <!-- 添付ファイル -->
                 <?php if (!empty($attachments)): ?>
                     <div class="attachment-list">
@@ -874,9 +553,24 @@ function linkifyContent($rawText) {
         <a href="<?= $deleteurl; ?>" class="<?= $deleteclass; ?>" style="color: #e53e3e;">この投稿を削除</a>
             
 
+<?php if ($show_reply):
+    $_SESSION['parent_id'] = (int)$post['id'];
+    $_SESSION['form_url'] = "api/post.php";?>
+<main class="container">
+    <?php require_once "postform.php";?>    
+</main>
 
+<?php endif;?>
         <div class="post-list" id="postList">
             <?php foreach ($replies as $p): ?>
+            <?php
+                // 添付ファイル取得
+                $replies_attachments = [];
+                $att_stmt = $pdo->prepare("SELECT * FROM attachments WHERE post_id = ? ORDER BY id ASC");
+                $att_stmt->execute([$p['id']]);
+                $replies_attachments = $att_stmt->fetchAll();
+                
+            ?>
                 <div class="post-card">
                     
                     <a href="detail.php?contentid=<?= htmlspecialchars($p['content_id']) ?>" class="post-card-link" aria-label="投稿の詳細を見る"></a>
@@ -895,19 +589,43 @@ function linkifyContent($rawText) {
                                 </div>
                             </div>
                         </div>
-                        <p class="post-content"><?= htmlspecialchars($p['content']) ?></p>
+                        <p class="post-content"><?= $p['content']; ?></p>
 
                         <!-- 添付ファイル -->
-                        <?php if (!empty($attachments_map[$p['id']])): ?>
+                        <?php if (!empty($replies_attachments)): ?>
                             <div class="attachment-list front-link">
-                                <?php foreach ($attachments_map[$p['id']] as $att): ?>
-                                    <a href="download_page.php?id=<?= $att['id'] ?>" 
-                                        class="attachment-item front-link" 
-                                        target="_blank">
-                                            📁 <?= htmlspecialchars($att['original_name']) ?>
-                                            <span class="attachment-size">(<?= number_format($att['file_size'] / 1024 / 1024, 1) ?>MB)</span>
-                                        </a>
-                                <?php endforeach; ?>
+                                <?php foreach ($replies_attachments as $ratt): ?>
+                                    <?php if (str_starts_with($ratt['mime_type'], 'image/')): ?>
+                                        <img src="api/serve_file.php?id=<?= $ratt['id'] ?>" class="attachment-image front-link" alt="<?= htmlspecialchars($ratt['original_name']) ?>" loading="lazy">
+                                    <?php elseif (str_starts_with($ratt['mime_type'], 'video/')): ?>
+                                        <video controls class="attachment-video front-link" preload="none">
+                                        <source src="api/serve_file.php?id=<?= $ratt['id'] ?>" type="<?= htmlspecialchars($ratt['mime_type']) ?>">
+                                    </video>
+
+                                <?php elseif (str_starts_with($ratt['mime_type'], 'audio/')): ?>
+                                    <audio controls class="attachment-audio front-link">
+                                        <source src="api/serve_file.php?id=<?= $ratt['id'] ?>" type="<?= htmlspecialchars($ratt['mime_type']) ?>">
+                                    </audio>
+                                <?php else: ?>
+                                    <div class="attachment-item front-link" data-att-id="<?= $ratt['id'] ?>">
+                                        <a href="download_page.php?id=<?= $ratt['id'] ?>" class="attachment-link" target="_blank">📁 <?= htmlspecialchars($ratt['original_name']) ?></a>
+                                        <span class="attachment-size">(<?= number_format($ratt['file_size'] / 1024 / 1024, 1) ?>MB)</span>
+
+                                        <button type="button" class="attachment-menu-btn" aria-label="その他の操作" aria-haspopup="true" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                            <circle cx="12" cy="5" r="2"/>
+                                            <circle cx="12" cy="12" r="2"/>
+                                            <circle cx="12" cy="19" r="2"/>
+                                        </svg>
+                                        </button>
+
+                                        <div class="attachment-menu" hidden>
+                                            <a href="download_page.php?id=<?= $ratt['id'] ?>" class="attachment-menu-item" target="_blank">ダウンロード</a>
+                                            <button type="button" class="attachment-menu-item attachment-report-btn" data-att-id="<?= $ratt['id'] ?>">通報</button>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
 <div class="post-actions front-link">

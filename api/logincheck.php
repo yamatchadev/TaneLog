@@ -9,8 +9,7 @@ if(!isset($_SESSION['user_id'])) {
         $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
         header('Location: /login.php');
         exit;
-    }else{ // remember_tokenがあるとき
-        // echo "remember_tokenがクッキー上にあります。";
+    }else{
         require_once __DIR__ . '/../db.php';
         $token = hash('sha256',$_COOKIE['remember_token']);
         try{

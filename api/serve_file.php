@@ -7,9 +7,15 @@ if(isset($_GET['id'])){
     $att=$stmt->fetch();
     if($att){
         header('Content-Type: ' . $att['mime_type']);
-        readfile('E:/learnphp_uploads/attachments/'.$att['stored_name']);
+        if(file_exists('E:/learnphp_uploads/attachments/'.$att['stored_name'])){
+            readfile('E:/learnphp_uploads/attachments/'.$att['stored_name']);
+        }else{
+            header('Content-Type: image/jpeg');
+            readfile('E:/learnphp_uploads/imgs/notfound.jpg'); 
+        }
     }else{
-        echo("ファイルが存在しません。");
+        header('Content-Type: image/jpeg');
+        readfile('E:/learnphp_uploads/imgs/notfound.jpg');
     }
 
 }else{

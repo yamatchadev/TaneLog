@@ -8,6 +8,89 @@ $recentnews = $news['header_title'];
 $recentnewsurl = "article/content/".$news['id'].".php";
 
 ?>
+<style>
+    
+            /* サイドメニュー */
+            .side-menu {
+                position: fixed;
+                top: 0;
+                right: -300px;
+                width: 260px;
+                height: 100%;
+                background-color: #2d3748;
+                transition: right 0.3s ease;
+                z-index: 99;
+                box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+            }
+            .side-menu.active {
+                right: 0;
+            }
+
+            /* メニュー内の閉じるボタンエリア */
+            .menu-close-wrapper {
+                display: flex;
+                justify-content: flex-end;
+                padding: 15px 20px;
+            }
+            .close-btn {
+                background: none;
+                border: none;
+                color: #a0aec0;
+                font-size: 28px;
+                cursor: pointer;
+                line-height: 1;
+                padding: 0;
+            }
+            .close-btn:hover {
+                color: #fff;
+            }
+
+            .side-menu ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .side-menu ul li a {
+                display: block;
+                padding: 16px 24px;
+                color: #e2e8f0;
+                text-decoration: none;
+                font-size: 16px;
+                border-bottom: 1px solid #4a5568;
+                transition: background 0.2s;
+            }
+            .side-menu ul li a:hover {
+                background-color: #4a5568;
+                color: #fff;
+            }
+            .side-menu ul li.danger a {
+                color: #feb2b2;
+            }
+            .side-menu ul li.danger a:hover {
+                background-color: #9b2c2c;
+                color: #fff;
+            }
+                        .menu-btn {
+                width: 30px;
+                height: 24px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 0;
+            }
+            .menu-btn span {
+                display: block;
+                width: 100%;
+                height: 3px;
+                background-color: var(--text-color);
+                border-radius: 2px;
+                transition: background-color 0.3s;
+            }
+
+</style>
 <script src="js/sidemenu.js"></script>
         <header>
             <div id="header-top">

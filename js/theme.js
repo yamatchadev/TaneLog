@@ -2,6 +2,7 @@
 // ① 初期テーマの決定とCSS読み込み（即時実行・head内で使う想定）
 (function () {
     var theme = localStorage.getItem('theme') || 'light';
+    document.write('<link rel="stylesheet" href="css/style.css">');
     document.write('<link rel="stylesheet" id="theme-link" href="css/style-' + theme + '.css">');
 })();
 
