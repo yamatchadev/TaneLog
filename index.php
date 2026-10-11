@@ -35,7 +35,8 @@ if(isset($_SESSION['user_id'])) {
         $stmt = $pdo->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
         $stmt->execute([$newtoken,$user['id']]);
         if($stmt){
-            $stmt = $pdo->query("INSERT INTO users (last_login) VALUES (NOW)");
+            $stmt = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+            $stmt->execute([$_SESSION['user_id']]);
             header('Location: timeline.php');      
             exit;      
         }else{
@@ -75,8 +76,10 @@ if(isset($_SESSION['user_id'])) {
                 header('dberror.php');
                 exit;
             }
-
+            $stmt = $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+            $stmt->execute([$_SESSION['user_id']]);
             if(isset($_SESSION['redirect_after_login'])){
+
                 header('Location:'.$_SESSION['redirect_after_login']);
                 exit;
             }else{

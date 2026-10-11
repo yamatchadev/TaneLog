@@ -105,6 +105,7 @@ function linkifyContent($rawText) {
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#fef8e5">
         <link rel="apple-touch-icon" href="/icon/icon-192.png">
+        <link rel="stylesheet" href="css/style.css">
 
         <script>
             if ('serviceWorker' in navigator) {
@@ -293,9 +294,7 @@ function linkifyContent($rawText) {
                 <?php if (!empty($userPosts)): ?>
                     <?php foreach ($userPosts as $p): ?>
                     <div class="post-card">
-
                         <a href="detail.php?contentid=<?= htmlspecialchars($p['content_id']) ?>" class="post-card-link" aria-label="投稿の詳細を見る"></a>
-
                         <div class="post-header">
                             <?php
                                 $iconSrc = ($p['icon_path'] && file_exists(__DIR__ . '/' . $p['icon_path']))

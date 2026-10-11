@@ -8,7 +8,7 @@ if(isset($_SESSION['view_contentid'])){
     exit;
 }
 
-
+unset($_SESSION['parent_id']);
 $page = basename(__FILE__);
 
 require_once 'api/logincheck.php';
@@ -103,6 +103,7 @@ function linkifyContent($rawText) {
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#fef8e5">
         <link rel="apple-touch-icon" href="/icon/icon-192.png">
+        <link rel="stylesheet" href="css/style.css">
         <script src="js/tinymce/tinymce.min.js"></script>
         <script>
             if ('serviceWorker' in navigator) {
@@ -313,7 +314,7 @@ function buildPostCard(p) {
                 </div>
             </div>
         </div>
-        <p class="post-content">${linkifyText(p.content)}</p>
+        <p class="post-content">${p.content}</p>
         <div class="post-actions front-link">
             <a href="detail.php?contentid=${p.content_id}&reply=1" class="action-btn reply-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

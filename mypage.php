@@ -10,7 +10,7 @@ require_once 'api/logincheck.php';
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>設定 - TaneLog</title>
         <link rel="icon" href="/favicon.ico" sizes="any">  
-        <meta name="theme-color" content="#fef8e5">
+        <link rel="stylesheet" href="css/style.css">
         <link rel="apple-touch-icon" href="/icon/icon-192.png">
         <script>
             if ('serviceWorker' in navigator) {
@@ -340,6 +340,11 @@ require_once 'api/logincheck.php';
             <p class="settings-card-title">お問い合わせフォーム</p>
             <p class="settings-card-desc">本サービスに関してのご意見、ご要望がありましたらお問い合わせください。</p>
             <a href="contact.php"><button class="settings-btn">お問い合わせフォーム</button></a>
+        </div>
+        <div class="settings-card">
+            <p class="settings-card-title">その他の情報</p>
+            <p class="settings-card-desc">その他の情報が閲覧できます。</p>
+            <a href="version.php"><button class="settings-btn">ページへ移動</button></a>
         </div>
     </div>
 </div>

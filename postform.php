@@ -24,6 +24,7 @@ $current_icon_src = ($current_user['icon_path'] && file_exists(__DIR__ . '/' . $
 
 ?>
 <link rel="stylesheet" href="css/postcard.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="js/tinymce/tinymce.min.js"></script>
 <script>
 const form = document.getElementById('postForm');
@@ -147,7 +148,7 @@ tinymce.init({
                 <img src="<?= $current_icon_src ?>" alt="マイアイコン" class="form-user-icon">
             </a>
             <p style="color: #ffffff">フォーム送信先: <?= $_SESSION['form_url']; ?></p>
-        <button type="submit">投稿する</button>
+        <button type="submit"><?php if(isset($_SESSION['parent_id'])){echo "返信";}else{echo "投稿";} ?></button>
         <script>
             document.getElementById('attachments').addEventListener('change', function () {
     const count = this.files.length;
@@ -174,7 +175,7 @@ const postJson = await postRes.json();
 console.log('post.phpのレスポンス:', postJson); // ← 追加
 
 if (!postJson.ok) {
-    alert('投稿に失敗しました');
+    alert('投稿に失敗しました。もう一度お試しください。');
     return;
 }
 

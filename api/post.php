@@ -68,6 +68,38 @@ function sanitizeRichText(string $html): string
 
     return $purifier->purify($html);
 }
+//通知用に全部消したものを出す
+function deleteTagsForNotify(string $html): string
+{
+    static $purifier = null;
+
+    if ($purifier === null) {
+        // キャッシュ保存先（公開ディレクトリの外が理想です）
+        $cacheDir = 'C:/tanelog_files/cache/htmlpurifier';
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0775, true);
+        }
+
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('Core.Encoding', 'UTF-8');
+        $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+
+        // 許可するタグと属性（これ以外はすべて除去されます）
+        $config->set('HTML.Allowed', '');
+
+        // style内で許可するCSSプロパティ
+        $config->set('CSS.AllowedProperties', '');
+
+        // 中身が空のタグを除去（<p></p> など）
+        $config->set('AutoFormat.RemoveEmpty', true);
+
+        $config->set('Cache.SerializerPath', $cacheDir);
+
+        $purifier = new HTMLPurifier($config);
+    }
+
+    return $purifier->purify($html);
+}
 
 /**
  * サニタイズ後のHTMLが実質的に空かどうかを判定する
@@ -99,16 +131,20 @@ if(isRichTextEmpty($content_clean)){
             echo json_encode(['ok' => false, 'error' => 'Database error']);
             exit();
         }
+        // 通知用のコンテンツを作成
+        $notify_content = deleteTagsForNotify($content_clean);
+
+        //返信かどうかを判定
         if(isset($_SESSION['parent_id'])){
             try{
                 // 返信先ユーザーに通知を送信
-                $stmt = $pdo->prepare("SELECT user_id FROM posts WHERE content_id = ?");
+                $stmt = $pdo->prepare("SELECT user_id FROM posts WHERE id = ?");
                 $stmt->execute([$_SESSION['parent_id']]);
                 $followerIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
                 // 通知送信（投稿者自身のニックネームを本文に含める）
-                $content_preview = mb_strlen($content_clean) > 30
-                    ? mb_substr($content_clean, 0, 30) . '…'
-                    : $content_clean;
+                $content_preview = mb_strlen($notify_content) > 30
+                    ? mb_substr($notify_content, 0, 30) . '…'
+                    : $notify_content;
 
                 sendPushNotification(
                     $pdo,
@@ -130,9 +166,9 @@ if(isRichTextEmpty($content_clean)){
                     $stmt->execute([$_SESSION['user_id']]);
                     $followerIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
                     // 通知送信（投稿者自身のニックネームを本文に含める）
-                    $content_preview = mb_strlen($content_clean) > 30
-                        ? mb_substr($content_clean, 0, 30) . '…'
-                        : $content_clean;
+                    $content_preview = mb_strlen($notify_content) > 30
+                        ? mb_substr($notify_content, 0, 30) . '…'
+                        : $notify_content;
 
                     sendPushNotification(
                         $pdo,
