@@ -16,8 +16,10 @@ if(isset($_SESSION['error'])){
         EOT;
 
     sendGmail($devemail, $subject, $body);
+    unset($_SESSION['error']);
 }else{
-    header('Location:'.$_SERVER['HTTP_REFERER'] ?? 'timeline.php');
+    $referer = $_SERVER['HTTP_REFERER'] ?? 'timeline.php';
+    header('Location:'.$referer);
     exit;
 }
 ?>

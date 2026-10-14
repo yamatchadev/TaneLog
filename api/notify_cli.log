@@ -711,3 +711,51 @@
 [2026-10-11 10:16:49] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?)
 [2026-10-11 10:16:49] 取得した購読数: 0
 [2026-10-11 10:16:49] 通知送信処理が正常に完了しました
+[2026-10-12 08:38:33] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16,40,17,18,33,31,41,43],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：suuiti","url":"\/detail.php?contentid=204169971497083"}
+[2026-10-12 08:38:33] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16,40,17,18,33,31,41,43],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：suuiti","url":"\/detail.php?contentid=010265562507132"}
+[2026-10-12 08:38:33] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?)
+[2026-10-12 08:38:33] 取得した購読数: 2
+[2026-10-12 08:38:33] 取得した購読数: 2
+[2026-10-12 08:38:34] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-10-12 08:38:34] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-10-12 08:38:34] 送信成功: https://fcm.googleapis.com/fcm/send/c2wx3jOPrik:APA91bEXp1oeXoyChbePdam7yncBR2BWHqZQ967aTU8xmg2Suz1KwDMtOYXe2g2WYrSGvJ4GII_2m9Nf7zBT6rZwhwGmoEeynGEEzAzfAQUrH8OK8fKSo0HdRkLzhidTHZ9q50l3Ujol
+[2026-10-12 08:38:34] 通知送信処理が正常に完了しました
+[2026-10-12 08:38:35] 送信成功: https://fcm.googleapis.com/fcm/send/c2wx3jOPrik:APA91bEXp1oeXoyChbePdam7yncBR2BWHqZQ967aTU8xmg2Suz1KwDMtOYXe2g2WYrSGvJ4GII_2m9Nf7zBT6rZwhwGmoEeynGEEzAzfAQUrH8OK8fKSo0HdRkLzhidTHZ9q50l3Ujol
+[2026-10-12 08:38:35] 通知送信処理が正常に完了しました
+[2026-10-12 08:39:22] 通知送信処理を開始: {"target_user_ids":[27,24],"title":"TaneLog","body":"TaneLog (人事)さんが新しい投稿をしました：？","url":"\/detail.php?contentid=913953885553377"}
+[2026-10-12 08:39:22] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?)
+[2026-10-12 08:39:22] 取得した購読数: 2
+[2026-10-12 08:39:22] 送信成功: https://fcm.googleapis.com/fcm/send/dFw4h7G-ioo:APA91bGTR0qtAvB2HGhed410CyI4ZTOULAxiEm-PecoOG9jVfPx3qTF8Qi_UrmamGd0wvGOSiP1ho36vTjMi77AfxzgLVIL_PXRdlGRqVekYRXoGiYQ2UgQu6R-hbzAGV7nJX5KgCyuB
+[2026-10-12 08:39:23] 送信成功: https://fcm.googleapis.com/fcm/send/dXAF4auc5uE:APA91bG05x3i7RfaBjJJuBVlS5lwDQDlACnDrglvjLt97ONZApPR7sf9XRmNMtUFsozt5KhjC5hRtnXzPv_EtP9QQjMhYyw8tCUZ0i2Q3hX1eBKLr56K8g37Vc62mzfnl0uYtuofM6j4
+[2026-10-12 08:39:23] 通知送信処理が正常に完了しました
+[2026-10-12 11:30:27] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16,40,17,18,33,31,41,43],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：プッシュ通知のテストにご協力をお願いいたします。","url":"\/detail.php?contentid=335468665296368"}
+[2026-10-12 11:30:27] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?)
+[2026-10-12 11:30:27] 取得した購読数: 2
+[2026-10-12 11:30:28] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-10-12 11:30:28] 送信失敗: https://fcm.googleapis.com/fcm/send/c2wx3jOPrik:APA91bEXp1oeXoyChbePdam7yncBR2BWHqZQ967aTU8xmg2Suz1KwDMtOYXe2g2WYrSGvJ4GII_2m9Nf7zBT6rZwhwGmoEeynGEEzAzfAQUrH8OK8fKSo0HdRkLzhidTHZ9q50l3Ujol 理由: Gone
+[2026-10-12 11:30:28] 通知送信処理が正常に完了しました
+[2026-10-12 12:06:41] 通知送信処理を開始: {"target_user_ids":[24],"title":"TaneLog","body":"TaneLog (人事)さんから返信が届きました：いつもご利用いただきありがとうございます。\r\n残りデータ容量…","url":"\/detail.php?contentid=936080601889395"}
+[2026-10-12 12:06:41] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?)
+[2026-10-12 12:06:41] 取得した購読数: 5
+[2026-10-12 12:06:41] 送信成功: https://fcm.googleapis.com/fcm/send/dFw4h7G-ioo:APA91bGTR0qtAvB2HGhed410CyI4ZTOULAxiEm-PecoOG9jVfPx3qTF8Qi_UrmamGd0wvGOSiP1ho36vTjMi77AfxzgLVIL_PXRdlGRqVekYRXoGiYQ2UgQu6R-hbzAGV7nJX5KgCyuB
+[2026-10-12 12:06:42] 送信成功: https://fcm.googleapis.com/fcm/send/dXAF4auc5uE:APA91bG05x3i7RfaBjJJuBVlS5lwDQDlACnDrglvjLt97ONZApPR7sf9XRmNMtUFsozt5KhjC5hRtnXzPv_EtP9QQjMhYyw8tCUZ0i2Q3hX1eBKLr56K8g37Vc62mzfnl0uYtuofM6j4
+[2026-10-12 12:06:42] 送信成功: https://fcm.googleapis.com/fcm/send/eQU6hHeWzW4:APA91bFqsDhmzFl5XPV1iQ6X56728ZIuaHn_hvDzmEVJxrP6ul1QG3fe9o_FGNKJqtwrVMG9ugkmLGGRf2QyNvdcz0YNesgJhCbxBGf2kSjZHi-G-AZU9RhggRQRmUA3zgs7Irhnnbqx
+[2026-10-12 12:06:42] 送信失敗: https://fcm.googleapis.com/fcm/send/fsf2LPsKrQQ:APA91bEzFCb2rgQ-4cEHQID30g9qCsB8sxCXMrl86SB40E5e_unIk_G_jzJzLPzyMMpysWxQTTC3XVFX2dFJ_hOqHBpx6XgXouw6b6oyavcxzHpilp8PJdhq1z3gpIAcC2u20-OLe-c1 理由: Gone
+[2026-10-12 12:06:42] 送信失敗: https://fcm.googleapis.com/fcm/send/f1gvJzxmKsw:APA91bEZwyOvU5fwvPTFj4DTWXqDlsIrqxysgNztprCWb6ZzqSGc3sCGp0QJryWLkRMdhKkSVdfdtP_5bPV0ZMb6_hltY5d8YLM3WyivVO7lJrShRxc45XVYxfO-Fh6N59ILVsSMN3Ks 理由: Gone
+[2026-10-12 12:06:42] 通知送信処理が正常に完了しました
+[2026-10-12 12:07:34] 通知送信処理を開始: {"target_user_ids":[25],"title":"TaneLog","body":"TaneLog（開発）さんから返信が届きました：死ねがとう\r\n体育科　廣井","url":"\/detail.php?contentid=960678262615384"}
+[2026-10-12 12:07:34] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?)
+[2026-10-12 12:07:34] 取得した購読数: 0
+[2026-10-12 12:07:34] 通知送信処理が正常に完了しました
+[2026-10-12 12:29:43] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16,40,17,18,33,31,41,43],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：永訣の朝　学習課題ノート　模範解答\r\n ","url":"\/detail.php?contentid=903581834537749"}
+[2026-10-12 12:29:43] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?)
+[2026-10-12 12:29:43] 取得した購読数: 1
+[2026-10-12 12:29:43] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-10-12 12:29:43] 通知送信処理が正常に完了しました
+[2026-10-12 12:30:35] 通知送信処理を開始: {"target_user_ids":[24],"title":"TaneLog","body":"TaneLog（開発）さんから返信が届きました：そうそう","url":"\/detail.php?contentid=864574365371873"}
+[2026-10-12 12:30:35] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?)
+[2026-10-12 12:30:35] 取得した購読数: 3
+[2026-10-12 12:30:36] 送信成功: https://fcm.googleapis.com/fcm/send/dFw4h7G-ioo:APA91bGTR0qtAvB2HGhed410CyI4ZTOULAxiEm-PecoOG9jVfPx3qTF8Qi_UrmamGd0wvGOSiP1ho36vTjMi77AfxzgLVIL_PXRdlGRqVekYRXoGiYQ2UgQu6R-hbzAGV7nJX5KgCyuB
+[2026-10-12 12:30:36] 送信成功: https://fcm.googleapis.com/fcm/send/dXAF4auc5uE:APA91bG05x3i7RfaBjJJuBVlS5lwDQDlACnDrglvjLt97ONZApPR7sf9XRmNMtUFsozt5KhjC5hRtnXzPv_EtP9QQjMhYyw8tCUZ0i2Q3hX1eBKLr56K8g37Vc62mzfnl0uYtuofM6j4
+[2026-10-12 12:30:36] 送信成功: https://fcm.googleapis.com/fcm/send/eQU6hHeWzW4:APA91bFqsDhmzFl5XPV1iQ6X56728ZIuaHn_hvDzmEVJxrP6ul1QG3fe9o_FGNKJqtwrVMG9ugkmLGGRf2QyNvdcz0YNesgJhCbxBGf2kSjZHi-G-AZU9RhggRQRmUA3zgs7Irhnnbqx
+[2026-10-12 12:30:36] 通知送信処理が正常に完了しました

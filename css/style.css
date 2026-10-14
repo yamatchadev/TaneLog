@@ -492,3 +492,16 @@ header h1 {
                 overflow-wrap: anywhere;
                 word-break: break-word;
             }
+                        /* ───【追加・変更】投稿フォーム下部のレイアウト調整 ─── */
+            .form-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .form-user-icon {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 1px solid var(--border-color);
+            }

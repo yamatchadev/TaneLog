@@ -12,7 +12,6 @@ $deleteable = "false";
 $deleteclass = "hidden"; 
 $replies = [];
 $show_reply = false;
-
 $_SESSION['view_contentid'] = htmlspecialchars($_GET['contentid']);
 
 if (isset($_SESSION['deleted']) && $_SESSION['deleted'] === true){
@@ -28,70 +27,69 @@ if(isset($_GET['reply']) && $_GET['reply'] === '1'){
     exit;
 }
 if (isset($_SESSION['send_reply']) && $_SESSION['send_reply']){
-    $show_reply = true;     
+    $show_reply = true;
     unset($_SESSION['send_reply']);
 }
-    $contentid = htmlspecialchars($_GET['contentid']);
-    // JOINを使って投稿と投稿者情報を一括取得(AI)
-    $stmt = $pdo->prepare(
-        "SELECT posts.*, users.nickname, users.icon_path, users.username,
-        COUNT(DISTINCT likes.id) AS like_count,
-        COUNT(DISTINCT replies.id) AS reply_count,
-        SUM(CASE WHEN likes.user_id = ? THEN 1 ELSE 0 END) AS liked_by_me
-        FROM posts
-        JOIN users ON posts.user_id = users.id 
-        LEFT JOIN likes ON likes.post_id = posts.id
-        LEFT JOIN posts AS replies ON replies.parent_id = posts.id
-        WHERE posts.content_id = ?
-        GROUP BY posts.id"
+$contentid = htmlspecialchars($_GET['contentid']);
+// JOINを使って投稿と投稿者情報を一括取得(AI)
+$stmt = $pdo->prepare(
+    "SELECT posts.*, users.nickname, users.icon_path, users.username,
+    COUNT(DISTINCT likes.id) AS like_count,
+    COUNT(DISTINCT replies.id) AS reply_count,
+    SUM(CASE WHEN likes.user_id = ? THEN 1 ELSE 0 END) AS liked_by_me
+    FROM posts
+    JOIN users ON posts.user_id = users.id 
+    LEFT JOIN likes ON likes.post_id = posts.id
+    LEFT JOIN posts AS replies ON replies.parent_id = posts.id
+    WHERE posts.content_id = ?
+    GROUP BY posts.id"    
     );
-    $stmt->execute([$_SESSION['user_id'],$contentid]);
-    $post = $stmt->fetch();
+$stmt->execute([$_SESSION['user_id'],$contentid]);
+$post = $stmt->fetch();
 
 
-    // 添付ファイル取得
-    $attachments = [];
-    if ($post) {
-        if($post['deleted'] == 1){
-            $post_error = "削除された投稿です。";
-        }else{
-            $att_stmt = $pdo->prepare("SELECT * FROM attachments WHERE post_id = ? ORDER BY id ASC");
-            $att_stmt->execute([$post['id']]);
-            $attachments = $att_stmt->fetchAll();
-            if(empty($attachments)){
-                        $file_error = "添付ファイルが見つかりません。";
-            }
-            $post['user_id'] = (int)$post['user_id']; 
-            $deleteable = isset($_SESSION['user_id']) && $_SESSION['user_id'] === $post['user_id'];
-            if($deleteable){
-                $deleteurl = "api/delete.php?contentid=" . $contentid;
-                $deleteclass = "back-link";
-            }else{
-                $deleteurl = "";
-                $deleteclass = "hidden";
-            }
-            $replies = $pdo->prepare(
-                "SELECT posts.*, users.nickname, users.icon_path, users.username,
-                COUNT(DISTINCT likes.id) AS like_count,
-                COUNT(DISTINCT replies.id) AS reply_count,
-                SUM(CASE WHEN likes.user_id = ? THEN 1 ELSE 0 END) AS liked_by_me
-                FROM posts
-                JOIN users ON posts.user_id = users.id
-                LEFT JOIN likes ON likes.post_id = posts.id
-                LEFT JOIN posts AS replies ON replies.parent_id = posts.id
-                WHERE posts.parent_id = ? AND posts.deleted = 0
-                GROUP BY posts.id
-                ORDER BY posts.created_at ASC"
-            );
-            $replies->execute([$_SESSION["user_id"],$post['id']]);
-            $replies=$replies->fetchAll();
-        }
-    }
-if(!isset($post_not_exist)){
-    $iconSrc = ($post['icon_path'] && file_exists(__DIR__ . '/' . $post['icon_path']))
+// 添付ファイル取得
+$attachments = [];
+if ($post) {
+    if($post['deleted'] == 1){
+        $post_error = "削除された投稿です。";
+    }else{
+        $iconSrc = ($post['icon_path'] && file_exists(__DIR__ . '/' . $post['icon_path']))
             ? htmlspecialchars($post['icon_path'])
-    : 'https://ui-avatars.com/api/?name=' . urlencode($post['nickname']) . '&background=4F5D95&color=fff';
-}        
+            : 'https://ui-avatars.com/api/?name=' . urlencode($post['nickname']) . '&background=4F5D95&color=fff';
+        $att_stmt = $pdo->prepare("SELECT * FROM attachments WHERE post_id = ? ORDER BY id ASC");
+        $att_stmt->execute([$post['id']]);
+        $attachments = $att_stmt->fetchAll();
+
+        $post['user_id'] = (int)$post['user_id']; 
+        $deleteable = isset($_SESSION['user_id']) && $_SESSION['user_id'] === $post['user_id'];
+            
+        if($deleteable){
+            $deleteurl = "api/delete.php?contentid=" . $contentid;
+            $deleteclass = "back-link";            
+        }else{
+            $deleteurl = "";
+            $deleteclass = "hidden";            
+            }
+        $replies = $pdo->prepare(
+            "SELECT posts.*, users.nickname, users.icon_path, users.username,
+            COUNT(DISTINCT likes.id) AS like_count,
+            COUNT(DISTINCT replies.id) AS reply_count,
+            SUM(CASE WHEN likes.user_id = ? THEN 1 ELSE 0 END) AS liked_by_me
+            FROM posts
+            JOIN users ON posts.user_id = users.id
+            LEFT JOIN likes ON likes.post_id = posts.id
+            LEFT JOIN posts AS replies ON replies.parent_id = posts.id
+            WHERE posts.parent_id = ? AND posts.deleted = 0
+            GROUP BY posts.id
+            ORDER BY posts.created_at ASC"
+        );
+        $replies->execute([$_SESSION["user_id"],$post['id']]);
+        $replies=$replies->fetchAll();          
+    }
+}else{
+        $post_error = "投稿が存在しません。コンテンツIDを確認してください。";    
+}
 
 // ───【追加】ログインユーザーの情報を取得 ───
 $user_stmt = $pdo->prepare("SELECT nickname, icon_path, username FROM users WHERE id = ?");
@@ -103,36 +101,13 @@ $current_icon_src = ($current_user['icon_path'] && file_exists(__DIR__ . '/' . $
     ? htmlspecialchars($current_user['icon_path'])
     : 'https://ui-avatars.com/api/?name=' . urlencode($current_user['nickname'] ?? 'User') . '&background=4F5D95&color=fff';
 
-// 投稿内のURLリンク化
-function linkifyContent($rawText) {
-    // 1. HTMLエスケープ
-    $escaped = htmlspecialchars($rawText, ENT_QUOTES, 'UTF-8');
-
-    // 2. URLを検出してリンク化
-    $pattern = '/(https?:\/\/[^\s<]+)/i';
-    $escaped = preg_replace_callback($pattern, function ($matches) {
-        $url = $matches[1];
-
-        // 末尾の句読点・記号をリンクの外に出す
-        $trailing = '';
-        if (preg_match('/[).,!?、。」』]+$/u', $url, $tMatch)) {
-            $trailing = $tMatch[0];
-            $url = substr($url, 0, -mb_strlen($trailing));
-        }
-
-        return '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" class="front-link">' . $url . '</a>' . $trailing;
-    }, $escaped);
-
-    return $escaped;
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="ja">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>投稿詳細 - TaneLog</title>
+        <title><?= $post['nickname'] ?> 「<?= preg_replace('/<[^>]*>/','', $post['content']) ?>」 - TaneLog</title>
                 
         <script src="js/sidemenu.js"></script>
         <script src="js/theme.js"></script>
@@ -167,136 +142,6 @@ function linkifyContent($rawText) {
                 text-decoration: underline;
             }
 
-
-/*リプライ画面 */
-.reply-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    box-sizing: border-box;
-    animation: overlayIn 0.2s ease;
-}
-@keyframes overlayIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-.reply-modal {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    width: 100%;
-    max-width: 520px;
-    padding: 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    animation: modalIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-@keyframes modalIn {
-    from { opacity: 0; transform: translateY(12px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-.reply-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-}
-.reply-to-label {
-    font-size: 14px;
-    color: #a0aec0;
-}
-.reply-to-label strong {
-    color: var(--primary-color);
-}
-.reply-close-btn {
-    color: #a0aec0;
-    display: flex;
-    align-items: center;
-    padding: 4px;
-    border-radius: 50%;
-    transition: background 0.15s, color 0.15s;
-}
-.reply-close-btn:hover {
-    background: var(--border-color);
-    color: var(--text-color);
-}
-.reply-origin {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 12px;
-    background: var(--bg-color);
-    border-radius: 8px;
-    margin-bottom: 16px;
-    border: 1px solid var(--border-color);
-}
-.reply-origin-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-}
-.reply-origin-content {
-    margin: 0;
-    font-size: 13px;
-    color: #a0aec0;
-    line-height: 1.5;
-}
-.reply-input-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-.reply-my-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-    margin-top: 4px;
-}
-.reply-input-row textarea {
-    flex: 1;
-    background: var(--bg-color);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 15px;
-    font-family: inherit;
-    resize: none;
-    box-sizing: border-box;
-}
-.reply-input-row textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-.reply-modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 12px;
-}
-.reply-char-count {
-    font-size: 13px;
-    color: #a0aec0;
-}
-.reply-modal-footer button {
-    padding: 8px 20px;
-    font-size: 14px;
-}
-.reply-modal-footer button:disabled {
-    opacity: 0.4;
-    cursor: default;
-}
 /* 返信一覧（post-list）内のカードサイズを縮小 */
 .post-list .post-card {
     padding: 12px 16px;       /* 内側の余白を小さく */

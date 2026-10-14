@@ -2,7 +2,6 @@
 require_once 'db.php';
 
 $id          = filter_input(INPUT_GET, 'id',    FILTER_VALIDATE_INT);
-$chunk_index = filter_input(INPUT_GET, 'chunk', FILTER_VALIDATE_INT);
 
 if (!$id) {
     http_response_code(400);
@@ -26,36 +25,28 @@ if (!file_exists($path)) {
 }
 
 $file_size  = filesize($path);
-$chunk_size = 50 * 1024 * 1024; // 50MB
-
-// chunkパラメータがなければファイル情報だけ返す
-if ($chunk_index === null || $chunk_index === false) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'ok'           => true,
-        'file_size'    => $file_size,
-        'total_chunks' => (int)ceil($file_size / $chunk_size),
-        'original_name' => $file['original_name'],
-    ]);
-    exit;
-}
-
-$offset = $chunk_index * $chunk_size;
-if ($offset >= $file_size) {
-    http_response_code(416);
-    exit('範囲外です');
-}
 
 $finfo     = new finfo(FILEINFO_MIME_TYPE);
 $real_mime = $finfo->file($path);
 
+while (ob_get_level()) { ob_end_clean(); };
+ini_set('zlib.output_compression', 'Off');
+set_time_limit(0);
+session_write_close();
+
 header('Content-Type: ' . $real_mime);
+header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($file['original_name']));
+header('Content-Length:' . $file_size);
 header('X-Content-Type-Options: nosniff');
 
 $fp = fopen($path, 'rb');
-fseek($fp, $offset);
-$data = fread($fp, $chunk_size);
+while (!feof($fp)){
+    if(connection_aborted()){
+        break;
+    }
+    $part = fread($fp, 1024*1024);
+    echo $part;
+    flush();
+}
 fclose($fp);
-
-echo $data;
 exit;

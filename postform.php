@@ -147,7 +147,6 @@ tinymce.init({
             <a href="<?= "profile.php?username=".$current_user['username']; ?>">
                 <img src="<?= $current_icon_src ?>" alt="マイアイコン" class="form-user-icon">
             </a>
-            <p style="color: #ffffff">フォーム送信先: <?= $_SESSION['form_url']; ?></p>
         <button type="submit"><?php if(isset($_SESSION['parent_id'])){echo "返信";}else{echo "投稿";} ?></button>
         <script>
             document.getElementById('attachments').addEventListener('change', function () {

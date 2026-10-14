@@ -17,7 +17,7 @@ require_once 'api/newscheck.php';
 //投稿フォーム処理はpost.phpとupload_chunk.php
 
 // ───【追加】ログインユーザーの情報を取得 ───
-$user_stmt = $pdo->prepare("SELECT nickname, icon_path, username FROM users WHERE id = ?");
+$user_stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $user_stmt->execute([$_SESSION['user_id']]);
 $current_user = $user_stmt->fetch(PDO::FETCH_ASSOC);
 if(!$current_user){
@@ -30,7 +30,8 @@ $current_icon_src = ($current_user['icon_path'] && file_exists(__DIR__ . '/' . $
     ? htmlspecialchars($current_user['icon_path'])
     : 'https://ui-avatars.com/api/?name=' . urlencode($current_user['nickname'] ?? 'User') . '&background=4F5D95&color=fff';
 // ──────────────────────────────────────────
-
+//アカウント何周年
+if($current_user['created_at']){}
 // 投稿一覧取得（投稿者名も一緒に）
 $stmt = $pdo->prepare(
     "SELECT posts.*,
@@ -161,19 +162,6 @@ function linkifyContent($rawText) {
                 align-items: center;
                 gap: 8px;
             }
-            /* ───【追加・変更】投稿フォーム下部のレイアウト調整 ─── */
-            .form-footer {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .form-user-icon {
-                width: 35px;
-                height: 35px;
-                border-radius: 50%;
-                object-fit: cover;
-                border: 1px solid var(--border-color);
-            }
 
         </style>
     </head>
@@ -196,9 +184,6 @@ function linkifyContent($rawText) {
 <main class="container">
     <?php $_SESSION['form_url'] = "timeline.php";?>
     <?php require_once 'postform.php';?>
-<script>
-
-</script>
 
             <div class="post-list" id="postList">
                 <?php foreach ($posts as $p): ?>

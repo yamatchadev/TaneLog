@@ -93,56 +93,18 @@ if (!$file) {
 <div class="card">
     <div class="filename"><?= htmlspecialchars($file['original_name']) ?></div>
     <div class="filesize"><?= number_format($file['file_size'] / 1024 / 1024, 1) ?> MB</div>
-
-    <div class="progress-wrap">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
-    <div class="progress-label" id="progressLabel">準備中</div>
     <div class="status" id="status">ダウンロードを開始しています</div>
 
     <a href="timeline.php" class="back-link">← タイムラインに戻る</a>
 </div>
 
 <script>
-const FILE_ID       = <?= (int)$file['id'] ?>;
-const FILENAME      = <?= json_encode($file['original_name']) ?>;
-const bar           = document.getElementById('progressBar');
-const label         = document.getElementById('progressLabel');
-const status        = document.getElementById('status');
+const FILE_ID  = <?= (int)$file['id'] ?>;
+const status   = document.getElementById('status');
 
-async function startDownload() {
-    // ファイル情報取得
-    const infoRes = await fetch(`download.php?id=${FILE_ID}`);
-    const info    = await infoRes.json();
-    const total   = info.total_chunks;
-
-    const chunks = [];
-    for (let i = 0; i < total; i++) {
-        const res  = await fetch(`download.php?id=${FILE_ID}&chunk=${i}`);
-        const blob = await res.blob();
-        chunks.push(blob);
-
-        const pct = Math.round((i + 1) / total * 100);
-        bar.style.width      = pct + '%';
-        label.textContent    = `${pct}%`;
-        status.textContent   = pct < 100 ? 'ダウンロード中です...' : '完了！保存しています...';
-    }
-
-    const merged = new Blob(chunks);
-    const url    = URL.createObjectURL(merged);
-    const a      = document.createElement('a');
-    a.href       = url;
-    a.download   = FILENAME;
-    a.click();
-    URL.revokeObjectURL(url);
-
-    status.textContent = 'ダウンロードが完了しました。';
-}
-
-startDownload().catch(err => {
-    status.textContent = 'ダウンロードエラーが発生しました: ' + err.message;
-    label.textContent  = '';
-});
+// ネイティブダウンロードを発火
+window.location.href = `download.php?id=${FILE_ID}`;
+status.textContent = 'ダウンロードを開始しました。このままお待ちください。';
 </script>
 </body>
 </html>
