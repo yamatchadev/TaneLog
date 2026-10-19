@@ -759,3 +759,9 @@
 [2026-10-12 12:30:36] 送信成功: https://fcm.googleapis.com/fcm/send/dXAF4auc5uE:APA91bG05x3i7RfaBjJJuBVlS5lwDQDlACnDrglvjLt97ONZApPR7sf9XRmNMtUFsozt5KhjC5hRtnXzPv_EtP9QQjMhYyw8tCUZ0i2Q3hX1eBKLr56K8g37Vc62mzfnl0uYtuofM6j4
 [2026-10-12 12:30:36] 送信成功: https://fcm.googleapis.com/fcm/send/eQU6hHeWzW4:APA91bFqsDhmzFl5XPV1iQ6X56728ZIuaHn_hvDzmEVJxrP6ul1QG3fe9o_FGNKJqtwrVMG9ugkmLGGRf2QyNvdcz0YNesgJhCbxBGf2kSjZHi-G-AZU9RhggRQRmUA3zgs7Irhnnbqx
 [2026-10-12 12:30:36] 通知送信処理が正常に完了しました
+[2026-10-15 07:03:23] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16,40,17,18,33,31,41,43],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：助けてください","url":"\/detail.php?contentid=251318338056821"}
+[2026-10-15 07:03:24] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?)
+[2026-10-15 07:03:24] 取得した購読数: 2
+[2026-10-15 07:03:25] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-10-15 07:03:25] 送信成功: https://wns2-pn1p.notify.windows.com/w/?token=BQYAAADin8M7doqj3yW7k%2fFOIC%2ftbVzCynPzYB%2bjQta46pKp4LiMIGqrdlJz2BWRL%2b5wFMz0zISAmB0TDWZnjsocfpV%2fkiwJigOdPsz0hnZOaQcCeWg1UKnuM%2f3QCOAtR%2fzrYwBWnsEdsZyZTuO2GA5TNI2W6jgfCYai7sKVZYyvAD3CtCN1P8hLAtsgU65ouv2tZ7%2fC5oAeM4KIIlE%2fv88i489SkAizoCSXS7qIaJJT1MMde05kaY50xVhN0ezT5uw2FBXo1Le97JDVS0VBzJ1f2OulIpxob%2fzpEDHdDGdLyCN2Egvxdp8jzAFXBQ8pqadS47YSkhFt9%2brq0UCYktnSjabU
+[2026-10-15 07:03:25] 通知送信処理が正常に完了しました
