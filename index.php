@@ -152,6 +152,7 @@ if($files !== false && count($files) > 0) {
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#fef8e5">
         <link rel="apple-touch-icon" href="/icon/icon-192.png">
+        <link rel="stylesheet" href="css/style.css">
         <script type="application/ld+json">
         {
         "@context": "https://schema.org",
@@ -187,7 +188,6 @@ if($files !== false && count($files) > 0) {
 
             body {
                 margin: 0;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
                 background-color: var(--bg-color);
                 color: var(--text-color);
             }

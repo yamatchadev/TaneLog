@@ -765,3 +765,13 @@
 [2026-10-15 07:03:25] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
 [2026-10-15 07:03:25] 送信成功: https://wns2-pn1p.notify.windows.com/w/?token=BQYAAADin8M7doqj3yW7k%2fFOIC%2ftbVzCynPzYB%2bjQta46pKp4LiMIGqrdlJz2BWRL%2b5wFMz0zISAmB0TDWZnjsocfpV%2fkiwJigOdPsz0hnZOaQcCeWg1UKnuM%2f3QCOAtR%2fzrYwBWnsEdsZyZTuO2GA5TNI2W6jgfCYai7sKVZYyvAD3CtCN1P8hLAtsgU65ouv2tZ7%2fC5oAeM4KIIlE%2fv88i489SkAizoCSXS7qIaJJT1MMde05kaY50xVhN0ezT5uw2FBXo1Le97JDVS0VBzJ1f2OulIpxob%2fzpEDHdDGdLyCN2Egvxdp8jzAFXBQ8pqadS47YSkhFt9%2brq0UCYktnSjabU
 [2026-10-15 07:03:25] 通知送信処理が正常に完了しました
+[2026-10-19 06:30:24] 通知送信処理を開始: {"target_user_ids":[27,34,25,21,35,16,40,17,18,33,31,41,43],"title":"TaneLog","body":"TaneLog（開発）さんが新しい投稿をしました：追加、改善してほしい機能を\r\n募集中です\r\n（リプライでお願…","url":"\/detail.php?contentid=812943500986893"}
+[2026-10-19 06:30:25] 実行するSQL: SELECT id, endpoint, p256dh_key, auth_key FROM push_subscriptions WHERE user_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?)
+[2026-10-19 06:30:25] 取得した購読数: 2
+[2026-10-19 06:30:25] 取得した購読数: 2
+[2026-10-19 06:30:26] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-10-19 06:30:26] 送信成功: https://web.push.apple.com/QOy_oujjoKAMX2mZUGS3UFkMhbBT-GiF2JEGLxT1zf02XI6RevgvyF0sfRY6kKp-qsRBb5rRsgTy4x7oNHzyI44NKZBFqOT8B-gyC4J8YmLTlgDxVWm8Ml8pG2Feie77Gok4YWx9LcZZFW9Zv5QowS9umuAoLpWEjWvHlFjOTpc
+[2026-10-19 06:30:26] 送信成功: https://wns2-pn1p.notify.windows.com/w/?token=BQYAAADin8M7doqj3yW7k%2fFOIC%2ftbVzCynPzYB%2bjQta46pKp4LiMIGqrdlJz2BWRL%2b5wFMz0zISAmB0TDWZnjsocfpV%2fkiwJigOdPsz0hnZOaQcCeWg1UKnuM%2f3QCOAtR%2fzrYwBWnsEdsZyZTuO2GA5TNI2W6jgfCYai7sKVZYyvAD3CtCN1P8hLAtsgU65ouv2tZ7%2fC5oAeM4KIIlE%2fv88i489SkAizoCSXS7qIaJJT1MMde05kaY50xVhN0ezT5uw2FBXo1Le97JDVS0VBzJ1f2OulIpxob%2fzpEDHdDGdLyCN2Egvxdp8jzAFXBQ8pqadS47YSkhFt9%2brq0UCYktnSjabU
+[2026-10-19 06:30:26] 通知送信処理が正常に完了しました
+[2026-10-19 06:30:26] 送信成功: https://wns2-pn1p.notify.windows.com/w/?token=BQYAAADin8M7doqj3yW7k%2fFOIC%2ftbVzCynPzYB%2bjQta46pKp4LiMIGqrdlJz2BWRL%2b5wFMz0zISAmB0TDWZnjsocfpV%2fkiwJigOdPsz0hnZOaQcCeWg1UKnuM%2f3QCOAtR%2fzrYwBWnsEdsZyZTuO2GA5TNI2W6jgfCYai7sKVZYyvAD3CtCN1P8hLAtsgU65ouv2tZ7%2fC5oAeM4KIIlE%2fv88i489SkAizoCSXS7qIaJJT1MMde05kaY50xVhN0ezT5uw2FBXo1Le97JDVS0VBzJ1f2OulIpxob%2fzpEDHdDGdLyCN2Egvxdp8jzAFXBQ8pqadS47YSkhFt9%2brq0UCYktnSjabU
+[2026-10-19 06:30:26] 通知送信処理が正常に完了しました
